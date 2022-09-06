@@ -105,12 +105,22 @@
 
 ;; Packs
 (use-package magit :ensure)
+
 (use-package rust-mode :ensure)
+
 (use-package evil
-  :ensure
+  :ensure t
+  :init
+  (setq evil-want-C-u-scroll t)
   :config
   (evil-mode 1)
-  (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command))
+  (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
+  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+  (customize-set-variable 'evil-default-state 'emacs)
+  (evil-set-initial-state 'prog-mode 'normal)
+  (evil-set-initial-state 'latex-mode 'normal)
+  (evil-set-initial-state 'org-mode 'normal))
+
 (use-package go-mode :ensure)
 
 ;; Set custom file
