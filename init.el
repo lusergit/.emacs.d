@@ -19,6 +19,7 @@
 
 ;; Behaviour
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (ido-mode 1)
 
@@ -60,32 +61,154 @@
 
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
+(setq display-time-day-and-date t)
+(display-time-mode 1)
 
-(use-package ef-themes :ensure)
-(use-package modus-themes :ensure
-  :config
-  (load-theme 'modus-vivendi t))
+;; Temi condizionali in base all'avvio
+(cond
+ ((member "-nano" command-line-args)
+  (progn
+    (add-to-list 'load-path (concat user-emacs-directory "nano-emacs/"))
+    (require 'nano)))
+ (t
+  (use-package ef-themes
+    :ensure
+    :config
+    (setq ef-themes-to-toggle '(ef-spring ef-winter))
+    
+    ;; Make customisations that affect Emacs faces BEFORE loading a theme
+    ;; (any change needs a theme re-load to take effect).
+    
+    (setq ef-themes-headings ; read the manual's entry or the doc string
+	  '((0 . (variable-pitch light 1.9))
+            (1 . (variable-pitch light 1.8))
+            (2 . (variable-pitch regular 1.7))
+            (3 . (variable-pitch regular 1.6))
+            (4 . (variable-pitch regular 1.5))
+            (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
+            (6 . (variable-pitch 1.3))
+            (7 . (variable-pitch 1.2))
+            (t . (variable-pitch 1.1))))
+    
+    ;; They are nil by default...
+    ;; (setq ef-themes-mixed-fonts t
+    ;; 	    ef-themes-variable-pitch-ui t)
+    
+    ;; Disable all other themes to avoid awkward blending:
+    (mapc #'disable-theme custom-enabled-themes)
+    
+    ;; Load the theme of choice:
+    (load-theme 'ef-spring :no-confirm)
+    
+    ;; OR use this to load the theme which also calls `ef-themes-post-load-hook':
+    (ef-themes-select 'ef-spring))))
 
 ;; Packs
 (use-package magit :ensure)
-;; (use-package evil :ensure :config (evil-mode 1))
+(use-package rust-mode :ensure)
+(use-package evil
+  :ensure
+  :config
+  (evil-mode 1)
+  (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command))
+(use-package go-mode :ensure)
 
-;; Customs
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(chart-face-color-list
-   '("#b52c2c" "#4fd100" "#f1e00a" "#2fafef" "#bf94fe" "#47dfea" "#702020" "#007800" "#b08600" "#1f2f8f" "#5f509f" "#00808f"))
- '(custom-safe-themes
-   '("90a6936b8c8f709825a0165928ef95f24f79486805be787630e7fe46bc5c9c7f" "47772b7cb9a4d978fa72eb1e895b0d84ecfc0baa670ab539e64c43135eeec79c" default))
- '(inhibit-startup-screen t)
- '(ispell-dictionary nil)
- '(package-selected-packages '(evil magit modus-themes ef-themes use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; Set custom file
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
+;; Functions
+(defun lz/open-configs ()
+  "Funzione per aprire il file di configurazione"
+  (interactive)
+  (find-file 
+   (expand-file-name 
+    (concat user-emacs-directory "init.el")))) 
+
+(defun lz/next-buffer-other-window (&optional arg interactive)
+  "In other window switch to ARGth next buffer.
+Call `switch-to-next-buffer' unless the selected window is the
+minibuffer window or is dedicated to its buffer."
+  (interactive "p\np")
+  (let ((other (other-window-for-scrolling))
+        (current (selected-window)))
+    (select-window other)
+    (next-buffer arg interactive)
+    (select-window current)))
+
+(defun lz/previous-buffer-other-window (&optional arg interactive)
+  "In other window switch to ARGth previous buffer.
+Call `switch-to-prev-buffer' unless the selected window is the
+minibuffer window or is dedicated to its buffer."
+  (interactive "p\np")
+  (let ((other (other-window-for-scrolling))
+        (current (selected-window)))
+    (select-window other)
+    (previous-buffer arg interactive)
+    (select-window current)))
+
+(defun lz/ff-other-window ()
+  "Find file in other window."
+      (interactive)
+  (cond
+   ((one-window-p t)
+    (call-interactively #'find-file-other-window))
+   (t
+    (let ((other (other-window-for-scrolling))
+          (current (selected-window)))
+      (select-window other)
+      (call-interactively #'find-file)
+      (select-window current)))))
+
+(defun lz/kill-buffer-other-window ()
+  "Kills buffer in other window."
+  (interactive)
+  (let ((other (other-window-for-scrolling))
+        (current (selected-window)))
+    (select-window other)
+    (kill-buffer)
+    (select-window current)))
+
+(defun lz/shell-vertically-split (&optional shell-type)
+  "Opens a shell in a vertically split window, if given 'eshell
+as argument starts a new eshell, 'term starts a new term and
+'ansi-term a new ansi-term"
+  (interactive)
+  (let ((other (split-window-below))
+	(current (selected-window))
+	(term-here (lambda ()
+		     (let* ((current (selected-window))
+			    (shell-buffer (shell)))
+		       (delete-window (get-buffer-window shell-buffer))
+		       (select-window current)
+		       (switch-to-buffer shell-buffer)))))
+    (select-window other)
+    (if (boundp shell-type)
+	(cond ((= shell-type 'eshell) (eshell))
+	      ((= shell-type 'term) (term))
+	      ((= shell-type 'ansi-term) (ansi-term))
+	      (t (funcall term-here)))
+      (funcall term-here))
+    (select-window current)))
+
+(defun lz/koans-setup ()
+  "Starts the setup for the next koan to do"
+  (interactive)
+  (let*
+      ((dir "/home/luca/gitgets/lisp-koans/")
+       (out (shell-command-to-string
+	     "cd /home/luca/gitgets/lisp-koans/; clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
+       (file-raw (cadr (split-string out)))
+       (filename (concat dir (cadr (split-string file-raw "\""))))
+       (command (concat "cd " dir " && sh meditate-linux.sh clisp"))
+       (current (selected-window))
+       (other (get-buffer-window (shell))))
+    (select-window current)
+    (find-file filename)
+    (select-window other)
+    (insert command)
+    (comint-send-input)
+    (select-window current)))
+
+(add-to-list 'load-path (concat user-emacs-directory "modules/"))
+(require 'lofi)
