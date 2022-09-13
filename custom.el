@@ -11,7 +11,7 @@
  '(inhibit-startup-screen t)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package)))
+   '(markdown-mode slime go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

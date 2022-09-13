@@ -74,21 +74,10 @@
   (use-package ef-themes
     :ensure
     :config
-    (setq ef-themes-to-toggle '(ef-spring ef-winter))
+    (setq ef-themes-to-toggle '(ef-spring ef-winter ef-autumn))
     
     ;; Make customisations that affect Emacs faces BEFORE loading a theme
     ;; (any change needs a theme re-load to take effect).
-    
-    (setq ef-themes-headings ; read the manual's entry or the doc string
-	  '((0 . (variable-pitch light 1.9))
-            (1 . (variable-pitch light 1.8))
-            (2 . (variable-pitch regular 1.7))
-            (3 . (variable-pitch regular 1.6))
-            (4 . (variable-pitch regular 1.5))
-            (5 . (variable-pitch 1.4)) ; absence of weight means `bold'
-            (6 . (variable-pitch 1.3))
-            (7 . (variable-pitch 1.2))
-            (t . (variable-pitch 1.1))))
     
     ;; They are nil by default...
     ;; (setq ef-themes-mixed-fonts t
@@ -98,10 +87,10 @@
     (mapc #'disable-theme custom-enabled-themes)
     
     ;; Load the theme of choice:
-    (load-theme 'ef-spring :no-confirm)
+    (load-theme 'ef-autumn :no-confirm)
     
     ;; OR use this to load the theme which also calls `ef-themes-post-load-hook':
-    (ef-themes-select 'ef-spring))))
+    (ef-themes-select 'ef-autumn))))
 
 ;; Packs
 (use-package magit :ensure)
@@ -122,6 +111,13 @@
   (evil-set-initial-state 'org-mode 'normal))
 
 (use-package go-mode :ensure)
+
+(use-package slime
+  :ensure
+  :init
+  (setq inferior-lisp-program "clisp"))
+
+(use-package markdown-mode :ensure)
 
 ;; Set custom file
 (setq custom-file "~/.emacs.d/custom.el")
