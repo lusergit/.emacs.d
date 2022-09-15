@@ -1,2 +1,5 @@
 elpa
 transient
+auto-save-list
+eln-cache
+*cache*

@@ -64,6 +64,27 @@
 (setq display-time-day-and-date t)
 (display-time-mode 1)
 
+;;;###autoload
+(defun lz/get-sys-theme ()
+  "Get system theme variant, :dark if dark mode is preferred, :light otherwise"
+  (let* ((command "gsettings get org.gnome.desktop.interface color-scheme")
+	 (variant (shell-command-to-string command))
+	 (is-dark (string-match-p ".prefer-dark." variant)))
+    (if is-dark :dark :light)))
+
+;;;###autoload
+(defun lz/set-theme (theme)
+  "sets a theme and disable all the other ones, avoiding strange glitches"
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme theme :no-confirm))
+
+;;;###autoload
+(defun lz/set-theme-dark-light (variant dark-theme light-theme)
+  "Check variant, if :dark sets dark-theme, set :light otherwise"
+  (if (eq :dark variant)
+      (lz/set-theme dark-theme)
+    (lz/set-theme light-theme)))
+
 ;; Temi condizionali in base all'avvio
 (cond
  ((member "-nano" command-line-args)
@@ -71,26 +92,19 @@
     (add-to-list 'load-path (concat user-emacs-directory "nano-emacs/"))
     (require 'nano)))
  (t
-  (use-package ef-themes
-    :ensure
-    :config
-    (setq ef-themes-to-toggle '(ef-spring ef-winter ef-autumn))
-    
-    ;; Make customisations that affect Emacs faces BEFORE loading a theme
-    ;; (any change needs a theme re-load to take effect).
-    
-    ;; They are nil by default...
-    ;; (setq ef-themes-mixed-fonts t
-    ;; 	    ef-themes-variable-pitch-ui t)
-    
-    ;; Disable all other themes to avoid awkward blending:
-    (mapc #'disable-theme custom-enabled-themes)
-    
-    ;; Load the theme of choice:
-    (load-theme 'ef-autumn :no-confirm)
-    
-    ;; OR use this to load the theme which also calls `ef-themes-post-load-hook':
-    (ef-themes-select 'ef-autumn))))
+  (let ((theme-light 'ef-spring)
+	(theme-dark 'ef-autumn))
+    (use-package ef-themes
+      :ensure
+      :config
+      (setq ef-themes-to-toggle '(ef-spring ef-winter ef-autumn))
+      (if (eq :dark (lz/get-sys-theme))
+	  (lz/set-theme theme-dark)
+	(lz/set-theme theme-light)))
+    (add-hook 'before-make-frame-hook (lambda ()
+					(if (eq :dark (lz/get-sys-theme))
+					    (lz/set-theme 'ef-autumn)
+					  (lz/set-theme 'ef-spring)))))))
 
 ;; Packs
 (use-package magit :ensure)
