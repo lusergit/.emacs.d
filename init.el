@@ -92,8 +92,8 @@
     (add-to-list 'load-path (concat user-emacs-directory "nano-emacs/"))
     (require 'nano)))
  (t
-  (let ((theme-light 'ef-spring)
-	(theme-dark 'ef-autumn))
+  (let ((theme-light 'ef-day)
+	(theme-dark 'ef-night))
     (use-package ef-themes
       :ensure
       :config
@@ -103,8 +103,8 @@
 	(lz/set-theme theme-light)))
     (add-hook 'before-make-frame-hook (lambda ()
 					(if (eq :dark (lz/get-sys-theme))
-					    (lz/set-theme 'ef-autumn)
-					  (lz/set-theme 'ef-spring)))))))
+					    (lz/set-theme 'ef-night)
+					  (lz/set-theme 'ef-day)))))))
 
 ;; Packs
 (use-package magit :ensure)
