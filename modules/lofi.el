@@ -8,12 +8,12 @@
   "creates a new raw lofi process"
   (make-process
    :name "lofi-process"
-   :buffer nil
+   :buffer "*chillin*"
    :command
    '("/bin/sh"
      "-c"
      "link=\`yt-dlp -g \"https://www.youtube.com/watch?v=jfKfPfyJRdk\"\` \
-&& ffplay -nodisp $link")))
+&& ffplay -nodisp -hide_banner -loglevel error $link")))
 
 ;;;###autoload
 (defun lz/play-lofi ()

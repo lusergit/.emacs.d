@@ -217,7 +217,8 @@ as argument starts a new eshell, 'term starts a new term and
   (let*
       ((dir "/home/luca/gitgets/lisp-koans/")
        (out (shell-command-to-string
-	     "cd /home/luca/gitgets/lisp-koans/; clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
+	     "cd /home/luca/gitgets/lisp-koans/; \
+clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
        (file-raw (cadr (split-string out)))
        (filename (concat dir (cadr (split-string file-raw "\""))))
        (command (concat "cd " dir " && sh meditate-linux.sh clisp"))
@@ -230,5 +231,12 @@ as argument starts a new eshell, 'term starts a new term and
     (comint-send-input)
     (select-window current)))
 
+;; Color mode for terms
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+
+;; My modules
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'lofi)
+(require 'yt-play)
