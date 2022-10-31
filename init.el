@@ -38,6 +38,7 @@
 
 ;; Themes and visual components
 (global-hl-line-mode 1)
+(blink-cursor-mode 0)
 
 (if (not (version< emacs-version "26.0"))
     (progn
@@ -54,7 +55,7 @@
 	(height . 30)
 	(vertical-scroll-bars . nil)
 	(horizontal-scroll-bars . nil)
-	(font . "Monospace 14")))
+	(font . "Space Mono-14")))
 
 (setq initial-frame-alist lz/frame-settings)
 (setq default-frame-alist lz/frame-settings)
@@ -92,8 +93,8 @@
     (add-to-list 'load-path (concat user-emacs-directory "nano-emacs/"))
     (require 'nano)))
  (t
-  (let ((theme-light 'ef-day)
-	(theme-dark 'ef-night))
+  (let ((theme-light 'ef-spring)
+	(theme-dark 'ef-autumn))
     (use-package ef-themes
       :ensure
       :config
@@ -102,9 +103,10 @@
 	  (lz/set-theme theme-dark)
 	(lz/set-theme theme-light)))
     (add-hook 'before-make-frame-hook (lambda ()
-					(if (eq :dark (lz/get-sys-theme))
-					    (lz/set-theme 'ef-night)
-					  (lz/set-theme 'ef-day)))))))
+					(let ((variant (lz/get-sys-theme)))
+					  (if (eq :dark variant)
+					      (lz/set-theme 'ef-autumn)
+					    (lz/set-theme 'ef-spring))))))))
 
 ;; Packs
 (use-package magit :ensure)
@@ -117,8 +119,11 @@
   (setq evil-want-C-u-scroll t)
   :config
   (evil-mode 1)
+  (setq evil-insert-state-cursor 'box)
   (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
+  (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
   (customize-set-variable 'evil-default-state 'emacs)
   (evil-set-initial-state 'prog-mode 'normal)
   (evil-set-initial-state 'latex-mode 'normal)
@@ -131,7 +136,88 @@
   :init
   (setq inferior-lisp-program "clisp"))
 
+(use-package vue-mode :ensure)
+(use-package typescript-mode :ensure)
+
 (use-package markdown-mode :ensure)
+
+(use-package pdf-tools
+  :ensure
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page))
+
+(use-package org-pdftools
+  :ensure t
+  :hook (org-mode . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+  :after org-noter
+  :ensure t
+  :config
+  ;; Add a function to ensure precise note is inserted
+  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                   (not org-noter-insert-note-no-questions)
+                                                 org-noter-insert-note-no-questions))
+           (org-pdftools-use-isearch-link t)
+           (org-pdftools-use-freestyle-annot t))
+       (org-noter-insert-note (org-noter--get-precise-info)))))
+  
+  (defun org-noter-set-start-location (&optional arg)
+    "When opening a session with this document, go to the current location.
+With a prefix ARG, remove start location."
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((inhibit-read-only t)
+           (ast (org-noter--parse-root))
+           (location (org-noter--doc-approx-location
+		      (when (called-interactively-p 'any) 'interactive))))
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         (org-with-wide-buffer
+          (goto-char (org-element-property :begin ast))
+          (if arg
+              (org-entry-delete nil org-noter-property-note-location)
+            (org-entry-put nil org-noter-property-note-location
+                           (org-noter--pretty-print-location location))))))))
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
+(use-package org-noter
+  :ensure t
+  :config
+  (require 'org-noter-pdftools)
+  (setq org-noter-auto-save-last-location t))
+
+(use-package yaml-mode
+  :ensure
+  :config
+  (add-hook 'yaml-mode-hook
+            (lambda ()
+              (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+
+;; Org configs
+(setq org-format-latex-options
+	'(:foreground default
+		      :background default
+		      :scale 2.0
+		      :html-foreground "Black"
+		      :html-background "Transparent"
+		      :html-scale 1.0
+		      :matchers
+		      ("begin" "$1" "$" "$$" "\\(" "\\[")))
+(setq org-startup-truncated nil
+      org-hide-leading-stars t
+      org-adapt-indentation t
+      org-log-done 'time
+      org-image-actual-width nil
+      org-latex-listings 'minted)
+
+;; Org agenda
+;; Cartelle in cui guardare i file: uni e src
+(setq org-agenda-files '("~/uni" "~/src"))
 
 ;; Set custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -144,6 +230,29 @@
   (find-file 
    (expand-file-name 
     (concat user-emacs-directory "init.el")))) 
+
+(defun lz/silent-compile ()
+  "Run compile in a silent buffer, not displaying it"
+  (interactive)
+  (progn
+    (if (get-buffer "*compilation*")
+  	(progn
+  	  (delete-windows-on (get-buffer "*compilation*"))
+  	  (kill-buffer "*compilation*")))
+    (call-interactively 'compile)
+    (delete-windows-on (get-buffer "*compilation*"))
+    (message "Compiling")))
+
+(defun lz/latex-save-and-compile ()
+  "A macro function to save and compile with one step"
+  (interactive)
+  (save-buffer)
+  (lz/silent-compile))
+
+(add-hook 'LaTeX-mode-hook
+	  '(define-key LaTeX-mode-map (kbd "M-s M-s") 'lz/latex-save-and-compile))
+
+(set-default 'preview-scale-function 2)
 
 (defun lz/next-buffer-other-window (&optional arg interactive)
   "In other window switch to ARGth next buffer.
@@ -240,3 +349,6 @@ clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'lofi)
 (require 'yt-play)
+(require 'splash)
+(setq initial-buffer-choice #'lz/splash-screen)
+(add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)

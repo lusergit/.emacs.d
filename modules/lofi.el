@@ -4,6 +4,7 @@
   "The current lofi process playing lofi music, if non nil
   contains the process that is playing lofi at the moment")
 
+;;;###autoload
 (defun lz/new-lofi-process ()
   "creates a new raw lofi process"
   (make-process
@@ -21,6 +22,7 @@
   (setq lofi-process (lz/new-lofi-process))
   (message "Chillin rn"))
 
+;;;###autoload
 (defun lz/stop-lofi ()
   "Stops the current lofi process if active, does nothing otherwise"
   (if lofi-process (progn
@@ -33,9 +35,11 @@
   :type 'string
   :group 'lofi)
 
+;;;###autoload
 (defun lofi--key (key)
   (kbd (concat lofi-keymap-prefix  " " key)))
 
+;;;###autoload
 (defun lz/lofi-toggle ()
   "Toggle between active and inactive state of lofi"
   (if lofi-mode
