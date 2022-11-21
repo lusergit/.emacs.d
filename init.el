@@ -1,6 +1,10 @@
 ; me
 (setq user-email-address "lucazanny@gmail.com")
 
+;; Set custom file
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 ;; use-package init
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -177,9 +181,6 @@ With a prefix ARG, remove start location."
 ;; Cartelle in cui guardare i file: uni e src
 (setq org-agenda-files '("~/uni" "~/src"))
 
-;; Set custom file
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
 
 ;; Functions
 (defun lz/open-configs ()
