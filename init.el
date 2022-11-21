@@ -38,6 +38,7 @@
 
 ;; Themes and visual components
 (global-hl-line-mode 1)
+(display-battery-mode 1)
 (blink-cursor-mode 0)
 
 (if (not (version< emacs-version "26.0"))
@@ -65,48 +66,6 @@
 (setq display-time-day-and-date t)
 (display-time-mode 1)
 
-;;;###autoload
-(defun lz/get-sys-theme ()
-  "Get system theme variant, :dark if dark mode is preferred, :light otherwise"
-  (let* ((command "gsettings get org.gnome.desktop.interface color-scheme")
-	 (variant (shell-command-to-string command))
-	 (is-dark (string-match-p ".prefer-dark." variant)))
-    (if is-dark :dark :light)))
-
-;;;###autoload
-(defun lz/set-theme (theme)
-  "sets a theme and disable all the other ones, avoiding strange glitches"
-  (mapc #'disable-theme custom-enabled-themes)
-  (load-theme theme :no-confirm))
-
-;;;###autoload
-(defun lz/set-theme-dark-light (variant dark-theme light-theme)
-  "Check variant, if :dark sets dark-theme, set :light otherwise"
-  (if (eq :dark variant)
-      (lz/set-theme dark-theme)
-    (lz/set-theme light-theme)))
-
-;; Temi condizionali in base all'avvio
-(cond
- ((member "-nano" command-line-args)
-  (progn
-    (add-to-list 'load-path (concat user-emacs-directory "nano-emacs/"))
-    (require 'nano)))
- (t
-  (let ((theme-light 'ef-spring)
-	(theme-dark 'ef-autumn))
-    (use-package ef-themes
-      :ensure
-      :config
-      (setq ef-themes-to-toggle '(ef-spring ef-winter ef-autumn))
-      (if (eq :dark (lz/get-sys-theme))
-	  (lz/set-theme theme-dark)
-	(lz/set-theme theme-light)))
-    (add-hook 'before-make-frame-hook (lambda ()
-					(let ((variant (lz/get-sys-theme)))
-					  (if (eq :dark variant)
-					      (lz/set-theme 'ef-autumn)
-					    (lz/set-theme 'ef-spring))))))))
 
 ;; Packs
 (use-package magit :ensure)
@@ -119,7 +78,6 @@
   (setq evil-want-C-u-scroll t)
   :config
   (evil-mode 1)
-  (setq evil-insert-state-cursor 'box)
   (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
   (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
@@ -234,14 +192,18 @@ With a prefix ARG, remove start location."
 (defun lz/silent-compile ()
   "Run compile in a silent buffer, not displaying it"
   (interactive)
-  (progn
-    (if (get-buffer "*compilation*")
-  	(progn
-  	  (delete-windows-on (get-buffer "*compilation*"))
-  	  (kill-buffer "*compilation*")))
-    (call-interactively 'compile)
-    (delete-windows-on (get-buffer "*compilation*"))
-    (message "Compiling")))
+  (let* ((bname "*compilation*"))
+    (progn
+      (if (get-buffer bname)
+  	  (progn
+  	    (delete-windows-on (get-buffer bname))
+  	    (kill-buffer bname)))
+      (let* ((other-win (split-window-vertically))
+	     (get-buffer-create bname))
+	(call-interactively 'compile)
+	(delete-window other-win)
+	(delete-windows-on (get-buffer bname))
+	(message "Compiling")))))
 
 (defun lz/latex-save-and-compile ()
   "A macro function to save and compile with one step"
@@ -350,5 +312,7 @@ clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
 (require 'lofi)
 (require 'yt-play)
 (require 'splash)
+(require 'themess)
+
 (setq initial-buffer-choice #'lz/splash-screen)
 (add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
