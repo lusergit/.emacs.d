@@ -67,7 +67,6 @@
 
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
-(setq display-time-day-and-date t)
 (display-time-mode 1)
 
 
@@ -107,6 +106,7 @@
   :ensure
   :config
   (pdf-tools-install)
+  (add-hook 'pdf-view-mode-hook #'(lambda () (display-line-numbers-mode -1)))
   (setq-default pdf-view-display-size 'fit-page))
 
 (use-package org-pdftools
@@ -312,8 +312,10 @@ clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'lofi)
 (require 'yt-play)
-(require 'splash)
+;; (require 'splash)
 (require 'themess)
 
-(setq initial-buffer-choice #'lz/splash-screen)
-(add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
+;; (setq initial-buffer-choice #'lz/splash-screen)
+;; (add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
+(add-hook 'after-init-hook 'org-agenda-list)
+(setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
