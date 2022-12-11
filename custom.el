@@ -12,10 +12,10 @@
  '(inhibit-startup-screen nil)
  '(ispell-dictionary nil)
  '(org-agenda-files
-   '("~/uni/agenda.org" "/home/luser/uni/fm/assignments/app.org" "/home/luser/uni/ml/homework.org"))
+   '("~/uni/sv/sketch/sketch.org" "/home/luca/uni/lessons.org" "/home/luca/.emacs.d/holidays.org" "/home/luca/uni/agenda.org"))
  '(org-agenda-inhibit-startup nil)
  '(package-selected-packages
-   '(battery-mode yaml yaml-mode pdf-tools org-noter typescript-mode vue-mode markdown-mode slime go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package))
+   '(clojure-mode battery-mode yaml yaml-mode pdf-tools org-noter typescript-mode vue-mode markdown-mode slime go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package))
  '(warning-suppress-types '((comp) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

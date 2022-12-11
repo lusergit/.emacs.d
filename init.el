@@ -1,4 +1,4 @@
-; me
+					; me
 (setq user-email-address "lucazanny@gmail.com")
 
 ;; Set custom file
@@ -73,8 +73,6 @@
 ;; Packs
 (use-package magit :ensure)
 
-(use-package rust-mode :ensure)
-
 (use-package evil
   :ensure t
   :init
@@ -90,17 +88,7 @@
   (evil-set-initial-state 'latex-mode 'normal)
   (evil-set-initial-state 'org-mode 'normal))
 
-(use-package go-mode :ensure)
-
-(use-package slime
-  :ensure
-  :init
-  (setq inferior-lisp-program "clisp"))
-
 (use-package vue-mode :ensure)
-(use-package typescript-mode :ensure)
-
-(use-package markdown-mode :ensure)
 
 (use-package pdf-tools
   :ensure
@@ -111,7 +99,8 @@
 
 (use-package org-pdftools
   :ensure t
-  :hook (org-mode . org-pdftools-setup-link))
+  :hook (
+	 org-mode . org-pdftools-setup-link))
 
 (use-package org-noter-pdftools
   :after org-noter
@@ -153,6 +142,16 @@ With a prefix ARG, remove start location."
   (require 'org-noter-pdftools)
   (setq org-noter-auto-save-last-location t))
 
+;; Language packs
+(use-package go-mode :ensure)
+(use-package clojure-mode :ensure)
+(use-package rust-mode :ensure)
+(use-package typescript-mode :ensure)
+(use-package markdown-mode :ensure)
+(use-package slime
+  :ensure
+  :init
+  (setq inferior-lisp-program "clisp"))
 (use-package yaml-mode
   :ensure
   :config
@@ -160,26 +159,36 @@ With a prefix ARG, remove start location."
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
+
+
 ;; Org configs
 (setq org-format-latex-options
-	'(:foreground default
-		      :background default
-		      :scale 2.0
-		      :html-foreground "Black"
-		      :html-background "Transparent"
-		      :html-scale 1.0
-		      :matchers
-		      ("begin" "$1" "$" "$$" "\\(" "\\[")))
+      '( :foreground default
+	 :background default
+	 :scale 2.0
+	 :html-foreground "Black"
+	 :html-background "Transparent"
+	 :html-scale 1.0
+	 :matchers
+	 ("begin" "$1" "$" "$$" "\\(" "\\[")))
+
 (setq org-startup-truncated nil
       org-hide-leading-stars t
       org-adapt-indentation t
       org-log-done 'time
       org-image-actual-width nil
+      org-agenda-tags-column -80
       org-latex-listings 'minted)
+
+;; Org babel languages (adding shell)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((eshell . t)))
 
 ;; Org agenda
 ;; Cartelle in cui guardare i file: uni e src
 (setq org-agenda-files '("~/uni" "~/src"))
+(setq org-agenda-span 'month)
 
 
 ;; Functions
@@ -241,7 +250,7 @@ minibuffer window or is dedicated to its buffer."
 
 (defun lz/ff-other-window ()
   "Find file in other window."
-      (interactive)
+  (interactive)
   (cond
    ((one-window-p t)
     (call-interactively #'find-file-other-window))
@@ -313,9 +322,11 @@ clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
 (require 'lofi)
 (require 'yt-play)
 ;; (require 'splash)
+(require 'pomo)
 (require 'themess)
 
 ;; (setq initial-buffer-choice #'lz/splash-screen)
 ;; (add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
-(add-hook 'after-init-hook 'org-agenda-list)
+(add-hook 'server-after-make-frame-hook #'org-agenda-list)
+(add-hook 'after-init-hook #'org-agenda-list)
 (setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
