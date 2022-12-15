@@ -1,5 +1,4 @@
-					; me
-(setq user-email-address "lucazanny@gmail.com")
+(setq user-email-address "lucazanny@gmail.com") ; me
 
 ;; Set custom file
 (setq custom-file "~/.emacs.d/custom.el")
