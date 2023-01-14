@@ -68,24 +68,35 @@
 (setq show-paren-style 'mixed)
 (display-time-mode 1)
 
+(add-to-list 'custom-theme-load-path
+	     (concat user-emacs-directory "themes/everforest-theme"))
+
+
 
 ;; Packs
+(use-package auto-dark
+  :ensure 
+  :config
+  (customize-set-variable 'auto-dark-dark-theme 'everforest-hard-dark)
+  (customize-set-variable 'auto-dark-light-theme 'everforest-hard-light)
+  (auto-dark-mode))
+
 (use-package magit :ensure)
 
-(use-package evil
-  :ensure t
-  :init
-  (setq evil-want-C-u-scroll t)
-  :config
-  (evil-mode 1)
-  (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
-  (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
-  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
-  (customize-set-variable 'evil-default-state 'emacs)
-  (evil-set-initial-state 'prog-mode 'normal)
-  (evil-set-initial-state 'latex-mode 'normal)
-  (evil-set-initial-state 'org-mode 'normal))
+;; (use-package evil
+;;   :ensure t
+;;   :init
+;;   (setq evil-want-C-u-scroll t)
+;;   :config
+;;   (evil-mode 1)
+;;   (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
+;;   (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
+;;   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+;;   (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
+;;   (customize-set-variable 'evil-default-state 'emacs)
+;;   (evil-set-initial-state 'prog-mode 'normal)
+;;   (evil-set-initial-state 'latex-mode 'normal)
+;;   (evil-set-initial-state 'org-mode 'normal))
 
 (use-package vue-mode :ensure)
 
@@ -141,6 +152,13 @@ With a prefix ARG, remove start location."
   (require 'org-noter-pdftools)
   (setq org-noter-auto-save-last-location t))
 
+(use-package org
+  :custom
+  (org-cite-global-bibliography
+   '("/home/luca/globib.bib"))
+  (org-cite-export-processors
+   '((t basic))))
+
 ;; Language packs
 (use-package go-mode :ensure)
 (use-package clojure-mode :ensure)
@@ -158,6 +176,15 @@ With a prefix ARG, remove start location."
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
+;; ORG ROAM, studio
+(let ((lz/biblio-dir "~/biblio"))
+  (use-package org-roam
+    :ensure
+    :init
+    (make-directory lz/biblio-dir)
+    :config
+    (setq org-roam-directory (file-truename lz/biblio-dir))
+    (org-roam-db-autosync-mode)))
 
 
 ;; Org configs
@@ -176,6 +203,7 @@ With a prefix ARG, remove start location."
       org-adapt-indentation t
       org-log-done 'time
       org-image-actual-width nil
+      org-latex-caption-above nil
       org-agenda-tags-column -80
       org-latex-listings 'minted)
 
@@ -322,7 +350,7 @@ clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
 (require 'yt-play)
 ;; (require 'splash)
 (require 'pomo)
-(require 'themess)
+;; (require 'themess)
 
 ;; (setq initial-buffer-choice #'lz/splash-screen)
 ;; (add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)

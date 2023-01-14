@@ -1,0 +1,3 @@
+[submodule "themes/everforest-theme"]
+	path = themes/everforest-theme
+	url = https://git.sr.ht/~theorytoe/everforest-theme
