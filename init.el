@@ -71,34 +71,63 @@
 (add-to-list 'custom-theme-load-path
 	     (concat user-emacs-directory "themes/everforest-theme"))
 
+(use-package all-the-icons
+  :ensure t)
 
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
 ;; Packs
 (use-package auto-dark
-  :ensure 
+  :ensure
   :config
-  (customize-set-variable 'auto-dark-dark-theme 'everforest-hard-dark)
-  (customize-set-variable 'auto-dark-light-theme 'everforest-hard-light)
+  (customize-set-variable 'auto-dark-dark-theme 'modus-vivendi)
+  (customize-set-variable 'auto-dark-light-theme 'modus-operandi)
   (auto-dark-mode))
 
 (use-package magit :ensure)
 
-;; (use-package evil
-;;   :ensure t
-;;   :init
-;;   (setq evil-want-C-u-scroll t)
-;;   :config
-;;   (evil-mode 1)
-;;   (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
-;;   (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
-;;   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-;;   (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
-;;   (customize-set-variable 'evil-default-state 'emacs)
-;;   (evil-set-initial-state 'prog-mode 'normal)
-;;   (evil-set-initial-state 'latex-mode 'normal)
-;;   (evil-set-initial-state 'org-mode 'normal))
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-C-u-scroll t)
+  :config
+  (evil-mode 1)
+  (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
+  (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
+  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
+  (customize-set-variable 'evil-default-state 'emacs)
+  (evil-set-initial-state 'slime-repl-mode 'emacs)
+  (evil-set-initial-state 'prog-mode 'normal)
+  (evil-set-initial-state 'latex-mode 'normal)
+  (evil-set-initial-state 'lisp-mode 'emacs)
+  (evil-set-initial-state 'lisp-mode 'emacs)
+  (evil-set-initial-state 'emacs-lisp-mode 'emacs)
+  (evil-set-initial-state 'org-mode 'normal))
 
-(use-package vue-mode :ensure)
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1))
+
+(use-package yasnippet-snippets :ensure t)
+
+;; (use-package vue-mode :ensure)
 
 (use-package pdf-tools
   :ensure
@@ -160,15 +189,30 @@ With a prefix ARG, remove start location."
    '((t basic))))
 
 ;; Language packs
-(use-package go-mode :ensure)
 (use-package clojure-mode :ensure)
-(use-package rust-mode :ensure)
+(use-package rust-mode
+  :ensure
+  :config
+  (setq rust-format-on-save t))
 (use-package typescript-mode :ensure)
 (use-package markdown-mode :ensure)
+(use-package erlang :ensure)
+(use-package haskell-mode :ensure)
+
+(use-package go-mode
+  :ensure
+  :config
+  (defun lsp-go-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+
+
 (use-package slime
   :ensure
   :init
-  (setq inferior-lisp-program "clisp"))
+  (setq inferior-lisp-program "sbcl"))
+
 (use-package yaml-mode
   :ensure
   :config
@@ -176,15 +220,83 @@ With a prefix ARG, remove start location."
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
+;; Language server pack support
+(use-package lsp-mode
+  :ensure t 
+  :commands (lsp lsp-deferred)
+  :config
+  (lsp-enable-which-key-integration t)
+  (setq gc-cons-threshold 100000000)	; to make the gc run
+					; sporadically
+  (setq read-process-output-max (* 1024 1024)) 
+  :hook
+  ((go-mode) . lsp))
+
+
 ;; ORG ROAM, studio
-(let ((lz/biblio-dir "~/biblio"))
-  (use-package org-roam
-    :ensure
-    :init
-    (make-directory lz/biblio-dir)
-    :config
-    (setq org-roam-directory (file-truename lz/biblio-dir))
-    (org-roam-db-autosync-mode)))
+(defvar lz/biblio-dir "~/biblio")
+(use-package org-roam
+  :ensure
+  :config
+  (setq org-roam-directory (file-truename lz/biblio-dir))
+  (org-roam-db-autosync-mode)
+  (org-roam-setup)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+	 ("C-c n f" . org-roam-node-find)
+	 ("C-c n i" . org-roam-node-insert)))
+
+;; HELM
+(use-package helm
+  :ensure t
+  :config
+  (helm-mode 1)
+  (global-set-key (kbd "M-x") #'helm-M-x)
+  (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
+  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+  (global-set-key (kbd "C-x C-f") #'helm-find-files)
+  (define-key helm-map (kbd "TAB") #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-z") #'helm-select-action)
+  
+  (define-key helm-map (kbd "C-k") 'helm-previous-line)
+  (define-key helm-map (kbd "C-j") 'helm-next-line)
+
+  (setq helm-multi-edit-save t)
+  (setq helm-split-with-multiple-windows t)
+  (setq helm-split-direction 'split-window-vertically)
+  (setq helm-speed-or-color t)
+  (setq helm-move-to-line-cycle t)
+  (setq helm-use-line-number-face t)
+  (setq helm-use-fuzzy-match t)
+  (setq helm-ff-default-directory (getenv "HOME")))
+
+;; tra i keybind di helm-swoop (define-key evil-motion-state-map (kbd
+;; "C-c C-s") 'helm-swoop-from-evil-search). Also tolto perchè isearch
+;; è più flessibile/leggero
+;; 
+(use-package helm-swoop
+  :ensure t
+  :config
+  ;; (global-set-key (kbd "C-s") 'helm-swoop)
+  (global-set-key (kbd "M-S") 'helm-swoop-back-to-last-point)
+  (global-set-key (kbd "C-c C-s") 'helm-multi-swoop)
+  (global-set-key (kbd "C-x M-s") 'helm-multi-swoop-all)
+
+  (define-key helm-swoop-map (kbd "C-s") 'helm-multi-swoop-all-from-helm-swoop)
+  (define-key helm-swoop-map (kbd "C-m") 'helm-multi-swoop-current-mode-from-helm-swoop)
+
+  (define-key helm-swoop-map (kbd "C-k") 'helm-previous-line)
+  (define-key helm-swoop-map (kbd "C-j") 'helm-next-line)
+  (define-key helm-multi-swoop-map (kbd "C-k") 'helm-previous-line)
+  (define-key helm-multi-swoop-map (kbd "C-j") 'helm-next-line)
+
+  (setq helm-multi-swoop-edit-save t)
+  (setq helm-swoop-split-with-multiple-windows t)
+  (setq helm-swoop-split-direction 'split-window-vertically)
+  (setq helm-swoop-speed-or-color t)
+  (setq helm-swoop-move-to-line-cycle t)
+  (setq helm-swoop-use-line-number-face t)
+  (setq helm-swoop-use-fuzzy-match t))
 
 
 ;; Org configs
@@ -205,6 +317,7 @@ With a prefix ARG, remove start location."
       org-image-actual-width nil
       org-latex-caption-above nil
       org-agenda-tags-column -80
+      org-html-doctype "html5"
       org-latex-listings 'minted)
 
 ;; Org babel languages (adding shell)
@@ -248,8 +361,29 @@ With a prefix ARG, remove start location."
   (save-buffer)
   (lz/silent-compile))
 
-(add-hook 'LaTeX-mode-hook
-	  '(define-key LaTeX-mode-map (kbd "M-s M-s") 'lz/latex-save-and-compile))
+(require 'tex-mode)
+(define-key latex-mode-map (kbd "M-s M-s") 'lz/latex-save-and-compile)
+
+(defun lz/save-export-scompile ()
+  " Macro function to save the currently working org document,
+export it to latex and compile it to pdf
+"
+  (interactive)
+  (save-buffer)
+  (org-latex-export-to-latex)
+  (lz/silent-compile))
+
+(defun lz/save-beamer-scompile ()
+  " Macro function to save the currently working org document,
+export it to latex and compile it to pdf
+"
+  (interactive)
+  (save-buffer)
+  (org-beamer-export-to-latex)
+  (lz/silent-compile))
+
+(define-key org-mode-map (kbd "M-s M-s") 'lz/save-export-scompile)
+(define-key org-mode-map (kbd "M-s M-b") 'lz/save-beamer-scompile)
 
 (set-default 'preview-scale-function 2)
 

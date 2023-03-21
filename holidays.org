@@ -12,3 +12,4 @@
 %%(org-anniversary 1965 7 22) Mamma compie %d anni
 %%(org-anniversary 1965 6 14) Papà compie %d anni
 %%(org-anniversary 1999 2 4) Buon compleanno! (%d)
+%%(org-anniversary 1982 2 12) Silvia scalvini compie %d anni
