@@ -4,3 +4,10 @@ auto-save-list
 eln-cache
 *cache*
 ido.last
+.lsp-session-v1
+.org-id-locations
+bookmarks
+eshell/
+org-roam.db
+snippets/
+tramp
