@@ -302,7 +302,7 @@ With a prefix ARG, remove start location."
 ;; CHAT GPT
 (add-to-list 'load-path "/home/luser/.emacs.d/modules/chatgpt-shell/")
 (require 'chatgpt-shell)
-(setq chatgpt-shell-openai-key "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")
+(setq chatgpt-shell-openai-key (getenv "CHATGPT-KEY"))
 
 ;; Org configs
 (setq org-format-latex-options
