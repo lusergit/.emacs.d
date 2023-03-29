@@ -299,6 +299,11 @@ With a prefix ARG, remove start location."
   (setq helm-swoop-use-fuzzy-match t))
 
 
+;; CHAT GPT
+(add-to-list 'load-path "/home/luser/.emacs.d/modules/chatgpt-shell/")
+(require 'chatgpt-shell)
+(setq chatgpt-shell-openai-key "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")
+
 ;; Org configs
 (setq org-format-latex-options
       '( :foreground default
@@ -317,8 +322,48 @@ With a prefix ARG, remove start location."
       org-image-actual-width nil
       org-latex-caption-above nil
       org-agenda-tags-column -80
-      org-html-doctype "html5"
       org-latex-listings 'minted)
+
+;; site setup
+(setf org-html-doctype "html5"
+      org-html-head-include-default-style nil)
+
+(setq org-publish-project-alist
+      '(("index"
+         :base-directory "~/src/sito/"
+         :base-extension "org"
+         :publishing-directory "~/src/lusergit.github.io/"
+         :publishing-function org-html-publish-to-html
+	 :html-head-include-default-style nil
+         :section-numbers nil
+         :with-toc nil
+         :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"/>"
+         :html-preamble t)
+
+        ("images"
+         :base-directory "~/src/sito/posts/imgs/"
+         :base-extension "jpg\\|gif\\|png"
+         :publishing-directory "~/src/lusergit.github.io/posts/imgs"
+         :publishing-function org-publish-attachment)
+
+        ("posts"
+         :base-directory "~/src/sito/posts/"
+         :base-extension "org"
+         :publishing-directory "~/src/lusergit.github.io/posts/"
+         :publishing-function org-html-publish-to-html
+	 :html-head-include-default-style nil
+	 :section-numbers nil
+	 :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\"/>"
+	 :html-preamble "<nav><a id=\"navbar-home\" href=\"../index.html\">🏡 Home</a></nav>"
+	 :html-link-home "../index.html")
+	
+	("style"
+         :base-directory "~/src/sito/"
+         :base-extension "css"
+         :publishing-directory "~/src/lusergit.github.io/"
+         :publishing-function org-publish-attachment)
+	
+        ("website" :components ("index" "images" "posts" "style"))))
 
 ;; Org babel languages (adding shell)
 (org-babel-do-load-languages
@@ -327,7 +372,7 @@ With a prefix ARG, remove start location."
 
 ;; Org agenda
 ;; Cartelle in cui guardare i file: uni e src
-(setq org-agenda-files '("~/uni" "~/src"))
+(setq org-agenda-files '("~/uni"))
 (setq org-agenda-span 'month)
 
 
