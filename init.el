@@ -71,8 +71,9 @@
 (add-to-list 'custom-theme-load-path
 	     (concat user-emacs-directory "themes/everforest-theme"))
 
-(use-package all-the-icons
-  :ensure t)
+(use-package ef-themes :ensure)
+
+(use-package all-the-icons :ensure)
 
 (use-package doom-themes
   :ensure t
@@ -91,12 +92,15 @@
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
+(use-package solo-jazz-theme
+  :ensure t)
+
 ;; Packs
 (use-package auto-dark
   :ensure
   :config
-  (customize-set-variable 'auto-dark-dark-theme 'modus-vivendi)
-  (customize-set-variable 'auto-dark-light-theme 'modus-operandi)
+  (customize-set-variable 'auto-dark-dark-theme 'ef-bio)
+  (customize-set-variable 'auto-dark-light-theme 'solo-jazz)
   (auto-dark-mode))
 
 (use-package magit :ensure)
@@ -138,8 +142,15 @@
 
 (use-package org-pdftools
   :ensure t
-  :hook (
-	 org-mode . org-pdftools-setup-link))
+  :hook (org-mode . org-pdftools-setup-link))
+
+
+(use-package org-noter
+  :ensure t
+  :config
+  (require 'org-noter-pdftools)
+  (setq org-noter-auto-save-last-location t))
+
 
 (use-package org-noter-pdftools
   :after org-noter
@@ -175,11 +186,6 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
-(use-package org-noter
-  :ensure t
-  :config
-  (require 'org-noter-pdftools)
-  (setq org-noter-auto-save-last-location t))
 
 (use-package org
   :custom
@@ -300,9 +306,9 @@ With a prefix ARG, remove start location."
 
 
 ;; CHAT GPT
-(add-to-list 'load-path "/home/luser/.emacs.d/modules/chatgpt-shell/")
-(require 'chatgpt-shell)
-(setq chatgpt-shell-openai-key (getenv "CHATGPT-KEY"))
+;; (add-to-list 'load-path "/home/luser/.emacs.d/modules/chatgpt-shell/")
+;; (require 'chatgpt-shell)
+;; (setq chatgpt-shell-openai-key (getenv "CHATGPT-KEY"))
 
 ;; Org configs
 (setq org-format-latex-options
