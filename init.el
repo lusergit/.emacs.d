@@ -92,37 +92,45 @@
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
-(use-package solo-jazz-theme
-  :ensure t)
+(use-package solo-jazz-theme :ensure)
+
+(use-package base16-theme :ensure)
 
 ;; Packs
 (use-package auto-dark
   :ensure
   :config
-  (customize-set-variable 'auto-dark-dark-theme 'ef-bio)
-  (customize-set-variable 'auto-dark-light-theme 'solo-jazz)
+  (customize-set-variable 'auto-dark-dark-theme 'modus-vivendi)
+  (customize-set-variable 'auto-dark-light-theme 'modus-operandi)
   (auto-dark-mode))
+
+(use-package htmlize :ensure)
 
 (use-package magit :ensure)
 
-(use-package evil
+;; (use-package evil
+;;   :ensure t
+;;   :init
+;;   (setq evil-want-C-u-scroll t)
+;;   :config
+;;   (evil-mode 1)
+;;   (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
+;;   (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
+;;   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
+;;   (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
+;;   (customize-set-variable 'evil-default-state 'emacs)
+;;   (evil-set-initial-state 'slime-repl-mode 'emacs)
+;;   (evil-set-initial-state 'prog-mode 'normal)
+;;   (evil-set-initial-state 'latex-mode 'normal)
+;;   (evil-set-initial-state 'lisp-mode 'emacs)
+;;   (evil-set-initial-state 'lisp-mode 'emacs)
+;;   (evil-set-initial-state 'emacs-lisp-mode 'emacs)
+;;   (evil-set-initial-state 'org-mode 'normal))
+
+(use-package expand-region
   :ensure t
-  :init
-  (setq evil-want-C-u-scroll t)
   :config
-  (evil-mode 1)
-  (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
-  (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
-  (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
-  (customize-set-variable 'evil-default-state 'emacs)
-  (evil-set-initial-state 'slime-repl-mode 'emacs)
-  (evil-set-initial-state 'prog-mode 'normal)
-  (evil-set-initial-state 'latex-mode 'normal)
-  (evil-set-initial-state 'lisp-mode 'emacs)
-  (evil-set-initial-state 'lisp-mode 'emacs)
-  (evil-set-initial-state 'emacs-lisp-mode 'emacs)
-  (evil-set-initial-state 'org-mode 'normal))
+  (global-set-key (kbd "C-c C-SPC") 'er/expand-region))
 
 (use-package yasnippet
   :ensure t
