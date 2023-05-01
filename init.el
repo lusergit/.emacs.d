@@ -61,8 +61,9 @@
 	(horizontal-scroll-bars . nil)
 	(font . "Space Mono-14")))
 
-(setq initial-frame-alist lz/frame-settings)
-(setq default-frame-alist lz/frame-settings)
+(setf initial-frame-alist lz/frame-settings)
+(setf default-frame-alist lz/frame-settings)
+
 
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
@@ -96,7 +97,10 @@
 
 (use-package base16-theme :ensure)
 
-;; Packs
+;; AGDA
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
+
 (use-package auto-dark
   :ensure
   :config
@@ -107,25 +111,6 @@
 (use-package htmlize :ensure)
 
 (use-package magit :ensure)
-
-;; (use-package evil
-;;   :ensure t
-;;   :init
-;;   (setq evil-want-C-u-scroll t)
-;;   :config
-;;   (evil-mode 1)
-;;   (define-key evil-normal-state-map (kbd "<tab>") 'indent-for-tab-command)
-;;   (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
-;;   (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
-;;   (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
-;;   (customize-set-variable 'evil-default-state 'emacs)
-;;   (evil-set-initial-state 'slime-repl-mode 'emacs)
-;;   (evil-set-initial-state 'prog-mode 'normal)
-;;   (evil-set-initial-state 'latex-mode 'normal)
-;;   (evil-set-initial-state 'lisp-mode 'emacs)
-;;   (evil-set-initial-state 'lisp-mode 'emacs)
-;;   (evil-set-initial-state 'emacs-lisp-mode 'emacs)
-;;   (evil-set-initial-state 'org-mode 'normal))
 
 (use-package expand-region
   :ensure t
@@ -138,8 +123,6 @@
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets :ensure t)
-
-;; (use-package vue-mode :ensure)
 
 (use-package pdf-tools
   :ensure
@@ -235,16 +218,16 @@ With a prefix ARG, remove start location."
               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
 ;; Language server pack support
-(use-package lsp-mode
-  :ensure t 
-  :commands (lsp lsp-deferred)
-  :config
-  (lsp-enable-which-key-integration t)
-  (setq gc-cons-threshold 100000000)	; to make the gc run
-					; sporadically
-  (setq read-process-output-max (* 1024 1024)) 
-  :hook
-  ((go-mode) . lsp))
+;; (use-package lsp-mode
+;;   :ensure t 
+;;   :commands (lsp lsp-deferred)
+;;   :config
+;;   (lsp-enable-which-key-integration t)
+;;   (setq gc-cons-threshold 100000000)	; to make the gc run
+;; 					; sporadically
+;;   (setq read-process-output-max (* 1024 1024)) 
+;;   :hook
+;;   ((go-mode) . lsp))
 
 
 ;; ORG ROAM, studio
@@ -312,12 +295,6 @@ With a prefix ARG, remove start location."
   (setq helm-swoop-use-line-number-face t)
   (setq helm-swoop-use-fuzzy-match t))
 
-
-;; CHAT GPT
-;; (add-to-list 'load-path "/home/luser/.emacs.d/modules/chatgpt-shell/")
-;; (require 'chatgpt-shell)
-;; (setq chatgpt-shell-openai-key (getenv "CHATGPT-KEY"))
-
 ;; Org configs
 (setq org-format-latex-options
       '( :foreground default
@@ -335,7 +312,6 @@ With a prefix ARG, remove start location."
       org-log-done 'time
       org-image-actual-width nil
       org-latex-caption-above nil
-      org-agenda-tags-column -80
       org-latex-listings 'minted)
 
 ;; site setup
@@ -512,26 +488,6 @@ as argument starts a new eshell, 'term starts a new term and
       (funcall term-here))
     (select-window current)))
 
-(defun lz/koans-setup ()
-  "Starts the setup for the next koan to do"
-  (interactive)
-  (let*
-      ((dir "/home/luca/gitgets/lisp-koans/")
-       (out (shell-command-to-string
-	     "cd /home/luca/gitgets/lisp-koans/; \
-clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
-       (file-raw (cadr (split-string out)))
-       (filename (concat dir (cadr (split-string file-raw "\""))))
-       (command (concat "cd " dir " && sh meditate-linux.sh clisp"))
-       (current (selected-window))
-       (other (get-buffer-window (shell))))
-    (select-window current)
-    (find-file filename)
-    (select-window other)
-    (insert command)
-    (comint-send-input)
-    (select-window current)))
-
 ;; Color mode for terms
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
@@ -540,9 +496,9 @@ clisp -q -norc -ansi contemplate.lisp | grep \"File\""))
 ;; My modules
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'lofi)
-(require 'yt-play)
+;; (require 'yt-play)
 ;; (require 'splash)
-(require 'pomo)
+;; (require 'pomo)
 ;; (require 'themess)
 
 ;; (setq initial-buffer-choice #'lz/splash-screen)
