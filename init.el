@@ -59,7 +59,7 @@
 	(height . 30)
 	(vertical-scroll-bars . nil)
 	(horizontal-scroll-bars . nil)
-	(font . "Space Mono-14")))
+	(font . "Space Mono-16")))
 
 (setf initial-frame-alist lz/frame-settings)
 (setf default-frame-alist lz/frame-settings)
@@ -76,31 +76,6 @@
 
 (use-package all-the-icons :ensure)
 
-(use-package doom-themes
-  :ensure t
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
-  ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-  (doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
-
-(use-package solo-jazz-theme :ensure)
-
-(use-package base16-theme :ensure)
-
-;; AGDA
-(load-file (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate")))
-
 (use-package auto-dark
   :ensure
   :config
@@ -109,13 +84,7 @@
   (auto-dark-mode))
 
 (use-package htmlize :ensure)
-
 (use-package magit :ensure)
-
-(use-package expand-region
-  :ensure t
-  :config
-  (global-set-key (kbd "C-c C-SPC") 'er/expand-region))
 
 (use-package yasnippet
   :ensure t
@@ -135,13 +104,11 @@
   :ensure t
   :hook (org-mode . org-pdftools-setup-link))
 
-
 (use-package org-noter
   :ensure t
   :config
   (require 'org-noter-pdftools)
   (setq org-noter-auto-save-last-location t))
-
 
 (use-package org-noter-pdftools
   :after org-noter
@@ -177,7 +144,6 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
-
 (use-package org
   :custom
   (org-cite-global-bibliography
@@ -204,7 +170,6 @@ With a prefix ARG, remove start location."
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
-
 (use-package slime
   :ensure
   :init
@@ -216,19 +181,6 @@ With a prefix ARG, remove start location."
   (add-hook 'yaml-mode-hook
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
-
-;; Language server pack support
-;; (use-package lsp-mode
-;;   :ensure t 
-;;   :commands (lsp lsp-deferred)
-;;   :config
-;;   (lsp-enable-which-key-integration t)
-;;   (setq gc-cons-threshold 100000000)	; to make the gc run
-;; 					; sporadically
-;;   (setq read-process-output-max (* 1024 1024)) 
-;;   :hook
-;;   ((go-mode) . lsp))
-
 
 ;; ORG ROAM, studio
 (defvar lz/biblio-dir "~/biblio")
@@ -267,10 +219,6 @@ With a prefix ARG, remove start location."
   (setq helm-use-fuzzy-match t)
   (setq helm-ff-default-directory (getenv "HOME")))
 
-;; tra i keybind di helm-swoop (define-key evil-motion-state-map (kbd
-;; "C-c C-s") 'helm-swoop-from-evil-search). Also tolto perchè isearch
-;; è più flessibile/leggero
-;; 
 (use-package helm-swoop
   :ensure t
   :config
@@ -312,6 +260,7 @@ With a prefix ARG, remove start location."
       org-log-done 'time
       org-image-actual-width nil
       org-latex-caption-above nil
+      org-agenda-tags-column -80
       org-latex-listings 'minted)
 
 ;; site setup
@@ -344,8 +293,7 @@ With a prefix ARG, remove start location."
 	 :html-head-include-default-style nil
 	 :section-numbers nil
 	 :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\"/>"
-	 :html-preamble "<nav><a id=\"navbar-home\" href=\"../index.html\">🏡 Home</a></nav>"
-	 :html-link-home "../index.html")
+	 :html-preamble "<nav><a id=\"navbar-home\" href=\"../index.html\">🏡 Home</a></nav>")
 	
 	("style"
          :base-directory "~/src/sito/"
@@ -496,13 +444,28 @@ as argument starts a new eshell, 'term starts a new term and
 ;; My modules
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'lofi)
+(require 'proverif)
 ;; (require 'yt-play)
 ;; (require 'splash)
 ;; (require 'pomo)
 ;; (require 'themess)
+
+;; ProVerif
+(setq auto-mode-alist
+      (cons '("\\.horn$" . proverif-horn-mode)
+	    (cons '("\\.horntype$" . proverif-horntype-mode)
+		  (cons '("\\.pv[l]?$" . proverif-pv-mode)
+			(cons '("\\.pi$" . proverif-pi-mode) auto-mode-alist)))))
+(autoload 'proverif-pv-mode "proverif" "Major mode for editing ProVerif code." t)
+(autoload 'proverif-pi-mode "proverif" "Major mode for editing ProVerif code." t)
+(autoload 'proverif-horn-mode "proverif" "Major mode for editing ProVerif code." t)
+(autoload 'proverif-horntype-mode "proverif" "Major mode for editing ProVerif code." t)
 
 ;; (setq initial-buffer-choice #'lz/splash-screen)
 ;; (add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
 (add-hook 'server-after-make-frame-hook #'org-agenda-list)
 (add-hook 'after-init-hook #'org-agenda-list)
 (setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))

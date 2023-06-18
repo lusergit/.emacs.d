@@ -47,8 +47,13 @@
       (setq buffer-read-only t))
     splash-buffer))
 
-(defun lz/splash-screen ()
+(defun lz/create-splash-screen ()
   "returns the bare start buffer"
   (get-buffer-create lz/splash-buffer-name))
+
+(defun lz/splash-screen ()
+  "create the start buffer and populate it"
+  (lz/create-splash-screen)
+  (lz/populate-splash-screen))
 
 (provide 'splash)
