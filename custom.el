@@ -16,6 +16,7 @@
  '(org-agenda-inhibit-startup nil)
  '(package-selected-packages
    '(proverif agda-mode htmlize expand-region base16-theme solo-jazz-theme org-noter-pdftools org-pdftools chatgpt-shell doom-themes all-the-icons helm-swoop helm haskell-mode haskell erlang yasnippet-snippets yasnippet lsp-mode auto-dark org-cite weblorg org-roam clojure-mode battery-mode yaml yaml-mode pdf-tools org-noter typescript-mode vue-mode markdown-mode slime go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package))
+ '(tab-bar-select-tab-modifiers '(control shift))
  '(warning-suppress-types '((comp) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

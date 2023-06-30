@@ -53,16 +53,23 @@
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
 (menu-bar-mode -1)
+;; tabs settings
+(setq tab-bar-select-tab-modifiers '(control shift)
+      tab-bar-tab-hints t)
+(tab-bar-history-mode 1)
+
+;; Winner mode!
+(winner-mode 1)
 
 (setq lz/frame-settings
       '((width . 100)
 	(height . 30)
 	(vertical-scroll-bars . nil)
 	(horizontal-scroll-bars . nil)
-	(font . "Space Mono-16")))
+	(font . "Iosevka Comfy Fixed-18")))
 
-(setf initial-frame-alist lz/frame-settings)
-(setf default-frame-alist lz/frame-settings)
+(setf initial-frame-alist lz/frame-settings
+      default-frame-alist lz/frame-settings)
 
 
 (show-paren-mode 1)
