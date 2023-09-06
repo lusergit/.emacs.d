@@ -66,7 +66,7 @@
 	(height . 30)
 	(vertical-scroll-bars . nil)
 	(horizontal-scroll-bars . nil)
-	(font . "Iosevka Comfy Fixed-18")))
+	(font . "Iosevka Comfy Fixed-16")))
 
 (setf initial-frame-alist lz/frame-settings
       default-frame-alist lz/frame-settings)
@@ -98,7 +98,10 @@
   :config
   (yas-global-mode 1))
 
-(use-package yasnippet-snippets :ensure t)
+(use-package yasnippet-snippets
+  :ensure t
+  :config
+  (yas-reload-all))
 
 (use-package pdf-tools
   :ensure
@@ -168,6 +171,8 @@ With a prefix ARG, remove start location."
 (use-package markdown-mode :ensure)
 (use-package erlang :ensure)
 (use-package haskell-mode :ensure)
+(use-package nix-mode :ensure)
+(use-package move-mode :ensure)
 
 (use-package go-mode
   :ensure
@@ -268,6 +273,7 @@ With a prefix ARG, remove start location."
       org-image-actual-width nil
       org-latex-caption-above nil
       org-agenda-tags-column -80
+      org-list-allow-alphabetical t
       org-latex-listings 'minted)
 
 ;; site setup
@@ -318,7 +324,7 @@ With a prefix ARG, remove start location."
 ;; Org agenda
 ;; Cartelle in cui guardare i file: uni e src
 (setq org-agenda-files '("~/uni"))
-(setq org-agenda-span 'month)
+(setq org-agenda-span 'week)
 
 
 ;; Functions
@@ -470,8 +476,9 @@ as argument starts a new eshell, 'term starts a new term and
 
 ;; (setq initial-buffer-choice #'lz/splash-screen)
 ;; (add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
-(add-hook 'server-after-make-frame-hook #'org-agenda-list)
-(add-hook 'after-init-hook #'org-agenda-list)
+
+(add-hook 'server-after-make-frame-hook #'org-todo-list)
+(add-hook 'after-init-hook #'org-todo-list)
 (setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
 
 (load-file (let ((coding-system-for-read 'utf-8))
