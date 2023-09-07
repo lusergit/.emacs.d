@@ -274,6 +274,7 @@ With a prefix ARG, remove start location."
       org-latex-caption-above nil
       org-agenda-tags-column -80
       org-list-allow-alphabetical t
+      ;; org-agenda-view-columns-initially nil
       org-latex-listings 'minted)
 
 ;; site setup
@@ -324,7 +325,7 @@ With a prefix ARG, remove start location."
 ;; Org agenda
 ;; Cartelle in cui guardare i file: uni e src
 (setq org-agenda-files '("~/uni"))
-(setq org-agenda-span 'week)
+(setq org-agenda-span 'month)
 
 
 ;; Functions

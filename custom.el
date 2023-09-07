@@ -12,7 +12,7 @@
  '(inhibit-startup-screen nil)
  '(ispell-dictionary nil)
  '(org-agenda-files
-   '("/home/luser/uni/typet/exam/proofs.org" "/home/luser/uni/agenda.org" "/home/luser/uni/esami.org" "/home/luser/uni/lessons.org" "/home/luser/uni/piano_serio.org"))
+   '("/home/luser/uni/typet/exam/proofs.org" "/home/luser/uni/agenda.org" "/home/luser/uni/piano_serio.org"))
  '(org-agenda-inhibit-startup nil)
  '(package-selected-packages
    '(move-mode nix-mode proverif agda-mode htmlize expand-region base16-theme solo-jazz-theme org-noter-pdftools org-pdftools chatgpt-shell doom-themes all-the-icons helm-swoop helm haskell-mode haskell erlang yasnippet-snippets yasnippet lsp-mode auto-dark org-cite weblorg org-roam clojure-mode battery-mode yaml yaml-mode pdf-tools org-noter typescript-mode vue-mode markdown-mode slime go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package))
