@@ -66,11 +66,11 @@
 	(height . 30)
 	(vertical-scroll-bars . nil)
 	(horizontal-scroll-bars . nil)
-	(font . "Iosevka Comfy Fixed-16")))
+	(font . "Iosevka Comfy Fixed-16")
+	))
 
 (setf initial-frame-alist lz/frame-settings
       default-frame-alist lz/frame-settings)
-
 
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
@@ -478,9 +478,38 @@ as argument starts a new eshell, 'term starts a new term and
 ;; (setq initial-buffer-choice #'lz/splash-screen)
 ;; (add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
 
+;; (defun getprop (list pname)
+;;   "Extracts the pname value from the list list shaped like ((p1 . v1) (p2 .v2) ...)"
+;;   (if list
+;;       (let* ((cur (car list))
+;; 	     (next (cdr list))
+;; 	     (curp (car cur))
+;; 	     (curv (cdr cur)))
+;; 	(if (eq curp pname) curv (getprop next pname)))
+;;     nil))
+
 (add-hook 'server-after-make-frame-hook #'org-todo-list)
 (add-hook 'after-init-hook #'org-todo-list)
 (setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
+
+(require 'treesit)
+
+;; M-x treesit-install-language-grammar bash
+(add-to-list
+ 'treesit-language-source-alist
+ '(bash "https://github.com/tree-sitter/tree-sitter-bash.git"))
+
+;; sh-mode use bash-ts-mode
+(add-to-list 'major-mode-remap-alist
+             '(sh-mode . bash-ts-mode))
+
+(when (fboundp 'native-compile-async)
+  (setq comp-deferred-compilation t
+        comp-deferred-compilation-black-list '("/mu4e.*\\.el$")))
+
+(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
+  (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
+  (add-to-list 'exec-path my-cabal-path))
 
 (load-file (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
