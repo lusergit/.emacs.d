@@ -91,7 +91,10 @@
   (auto-dark-mode))
 
 (use-package htmlize :ensure)
-(use-package magit :ensure)
+(use-package magit
+  :ensure t
+  :config
+  (setq epa-pinentry-mode 'loopback))
 
 (use-package yasnippet
   :ensure t
