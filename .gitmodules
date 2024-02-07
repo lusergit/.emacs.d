@@ -1,3 +1,6 @@
 [submodule "themes/everforest-theme"]
 	path = themes/everforest-theme
 	url = https://git.sr.ht/~theorytoe/everforest-theme
+[submodule "modules/nano-emacs"]
+	path = modules/nano-emacs
+	url = git@github.com:rougier/nano-emacs.git

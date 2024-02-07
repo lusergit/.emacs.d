@@ -1,8 +1,8 @@
-(require 'commodity)
-
 (defun lz/get-quote (file)
   "Get a quote from a file"
-  (let* ((fcontents (lz/read-file file))
+  (let* ((fcontents (with-temp-buffer
+		      (insert-file-contents fname)
+		      (buffer-string)))
 	 (splitted (split-string fcontents "\n\n"))
 	 (rnd (random (length splitted))))
     (nth rnd splitted)))
@@ -55,5 +55,8 @@
   "create the start buffer and populate it"
   (lz/create-splash-screen)
   (lz/populate-splash-screen))
+
+(setq initial-buffer-choice #'lz/splash-screen)
+(add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
 
 (provide 'splash)
