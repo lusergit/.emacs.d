@@ -1,7 +1,7 @@
 (defun lz/get-quote (file)
   "Get a quote from a file"
   (let* ((fcontents (with-temp-buffer
-		      (insert-file-contents fname)
+		      (insert-file-contents file)
 		      (buffer-string)))
 	 (splitted (split-string fcontents "\n\n"))
 	 (rnd (random (length splitted))))
@@ -32,10 +32,9 @@
 
 (defconst lz/splash-buffer-name "*start*")
 
-(defun lz/populate-splash-screen ()
+(defun lz/populate-splash-screen (buffer)
   "Create the splash screen in buffer *start* and switch to it"
-  (let ((splash-buffer (get-buffer-create lz/splash-buffer-name)))
-    (with-current-buffer splash-buffer
+    (with-current-buffer buffer
       (let* ((inhibit-read-only t)
 	     (fancy-splash-text (lz/get-quote lz/quotes-file))
 	     (splitted (split-string fancy-splash-text "\n"))
@@ -45,18 +44,21 @@
 	(insert (propertize "\n" 'display `(newline :center (top-margin))))
 	(lz/display-centered fancy-splash-text))
       (setq buffer-read-only t))
-    splash-buffer))
+    buffer)
 
-(defun lz/create-splash-screen ()
+(defun lz/get-splash-screen ()
   "returns the bare start buffer"
   (get-buffer-create lz/splash-buffer-name))
 
 (defun lz/splash-screen ()
   "create the start buffer and populate it"
-  (lz/create-splash-screen)
-  (lz/populate-splash-screen))
+  (lz/populate-splash-screen (lz/get-splash-screen)))
 
-(setq initial-buffer-choice #'lz/splash-screen)
-(add-hook 'server-after-make-frame-hook #'lz/populate-splash-screen)
+(setq initial-buffer-choice #'lz/get-splash-screen)
+(add-hook 'server-after-make-frame-hook
+	  '(lambda ()
+	     (lz/populate-splash-screen (lz/get-splash-screen))
+	     (with-current-buffer (lz/get-splash-screen)
+	       (setq cursor-type nil))))
 
 (provide 'splash)

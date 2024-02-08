@@ -156,8 +156,8 @@ export it to latex and compile it to pdf"
 
 (set-default 'preview-scale-function 2)
 
-(add-hook 'server-after-make-frame-hook #'org-agenda-list)
-(add-hook 'after-init-hook #'org-agenda-list)
-(setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
+;; (add-hook 'server-after-make-frame-hook #'org-agenda-list)
+;; (add-hook 'after-init-hook #'org-agenda-list)
+;; (setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
 
 (provide 'org-custom)

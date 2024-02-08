@@ -98,4 +98,4 @@ as argument starts a new eshell, 'term starts a new term and
       (funcall term-here))
     (select-window current)))
 
-(provide 'window)
+(provide 'window-custom)

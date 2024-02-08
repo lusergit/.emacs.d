@@ -3,4 +3,4 @@
   :config
   (setq epa-pinentry-mode 'loopback))
 
-(provide 'git)
+(provide 'git-custom)

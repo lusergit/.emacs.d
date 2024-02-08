@@ -27,13 +27,12 @@
 
 ;; MODULES
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
-(require 'window)
+(require 'window-custom)
 (require 'modeline)
 (require 'lofi)
 (require 'proverif)
 (require 'music-chord)
-(require 'webdev)
-(require 'git)
+(require 'git-custom)
 (require 'themess)
 (require 'org-custom)
 (require 'languages)
@@ -41,6 +40,7 @@
 (require 'latex-custom)
 (require 'splash)
 (require 'treesit)
+(require 'interactions)
 
 ;; AGDA (aggiunto da agda stesso quindi non sposto)
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
