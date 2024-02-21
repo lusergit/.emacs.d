@@ -1,4 +1,10 @@
+;;; package -- Site
 
+;;; Commentary:
+;; The following code configures org mode to publish the files in
+;; ~/src/sito/ in ~/src/lusergit.github.io/
+
+;;; Code:
 (setq org-publish-project-alist
       '(("index"
          :base-directory "~/src/sito/"
@@ -36,3 +42,4 @@
         ("website" :components ("index" "images" "posts" "style"))))
 
 (provide 'site)
+;;; site.el ends here

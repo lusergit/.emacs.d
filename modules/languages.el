@@ -1,4 +1,9 @@
-;; LANGUAGES
+;;; package -- Languages
+
+;;; Commentary:
+;; provides support for every language
+
+;;; Code:
 (use-package clojure-mode :ensure)
 (use-package cider
   :ensure t)
@@ -35,7 +40,15 @@
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
-;; HTMLIZE
 (use-package htmlize :ensure)
 
+;; AGDA
+(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
+  (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
+  (add-to-list 'exec-path my-cabal-path))
+
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+
 (provide 'languages)
+;;; languages.el ends here

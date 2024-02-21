@@ -1,4 +1,11 @@
-(setq user-email-address "lucazanny@gmail.com") ; me
+;;; Init -- emacs init
+
+;;; Commentary:
+;; Standard Emacs init file, initializing package.el and then loading
+;; modules (elisp code)
+
+;;; Code:
+(setq user-email-address "lucazanny@gmail.com")
 
 ;; Set custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -11,10 +18,10 @@
        (proto (if no-ssl "https" "http")))
   (when no-ssl (warn "No ssl! MITM possibili!"))
   (add-to-list 'package-archives
-               (cons 
-                "melpa" (concat proto "://melpa.org/packages/")) 
+               (cons "melpa" (concat proto "://melpa.org/packages/"))
                t))
 (package-initialize)
+(setq use-package-always-ensure t)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -41,11 +48,10 @@
 (require 'splash)
 (require 'treesit)
 (require 'interactions)
+(require 'site)
+(require 'tesi)
+(require 'snippets-custom)
+(require 'metalang)
 
-;; AGDA (aggiunto da agda stesso quindi non sposto)
-(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
-  (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
-  (add-to-list 'exec-path my-cabal-path))
-
-(load-file (let ((coding-system-for-read 'utf-8))
-             (shell-command-to-string "agda-mode locate")))
+(provide 'init)
+;;; init.el ends here
