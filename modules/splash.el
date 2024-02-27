@@ -56,9 +56,10 @@
 
 (setq initial-buffer-choice #'lz/get-splash-screen)
 (add-hook 'server-after-make-frame-hook
-	  '(lambda ()
-	     (lz/populate-splash-screen (lz/get-splash-screen))
-	     (with-current-buffer (lz/get-splash-screen)
-	       (setq cursor-type nil))))
+	  #'(lambda ()
+	      (lz/populate-splash-screen (lz/get-splash-screen))
+	      (with-current-buffer (lz/get-splash-screen)
+		(setq cursor-type nil))))
 
 (provide 'splash)
+;;; splash.el ends here

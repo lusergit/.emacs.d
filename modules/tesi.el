@@ -5,22 +5,27 @@
 ;; a impostare il lavoro su più finestre per scrivere la tesi
 
 ;;; Code:
+(defvar thesis-pdf-file "~/tesi/out/thesis.pdf")
+(defvar thesis-tex-file "~/tesi/thesis.tex")
+
 (defun lz/tesi-setup ()
   "Apre un tex della tesi a sinistra (fa scegliere il file) e il compilato a destra."
   (interactive)
   (let ((right (split-window-right))
 	(left (selected-window)))
     (select-window right)
-    (find-file "~/uni/tesi/git/out/thesis.pdf")
+    (find-file thesis-pdf-file)
     (select-window left)
-    (find-file "~/uni/tesi/git/.")))
+    (find-file thesis-tex-file)))
 
 (defun lz/tesi-setup1 ()
-  "Apre un tex della tesi in alto (fa scegliere il file) e il compilato in alto."
+  "Apre il compilato della tesi, così da poterlo editare cliccandoci
+sopra e distribuendo lo schermo secondo le regole di composizione
+di default."
   (interactive)
   (let ((window (selected-window)))
     (select-window window)
-    (find-file "~/uni/tesi/git/out/thesis.pdf")
+    (find-file thesis-pdf-file)
     (pdf-view-fit-width-to-window)))
 
 (provide 'tesi)

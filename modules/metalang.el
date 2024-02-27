@@ -4,6 +4,9 @@
 ;; autocompletion, on a per-language basis.
 
 ;;; Code:
+
+(use-package helm-lsp :commands helm-lsp-workspace-symbol)
+
 (use-package lsp-mode
   :ensure t
   :init
@@ -13,13 +16,7 @@
 	 (rust-mode . lsp)
 	 (tex-mode . lsp)
 	 (LaTeX-mode . lsp))
-  :commands lsp
-  :config
-  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-  (use-package dap :ensure t)
-  (use-package dap-c :ensure t)
-  (use-package dap-c++ :ensure t)
-  (use-package dap-rust :ensure t))
+  :commands lsp)
 
 (use-package flycheck
   :ensure t
@@ -69,8 +66,10 @@
   :config
   (global-semanticdb-minor-mode 1)
   (global-semantic-idle-scheduler-mode 1)
-  
   (semantic-mode 1))
+
+;; auto matching parenthesis
+(electric-pair-mode t)
 
 (provide 'metalang)
 ;;; metalang.el ends here

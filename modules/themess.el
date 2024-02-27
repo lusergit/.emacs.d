@@ -1,5 +1,9 @@
+;;; Themes -- package containing visual settings
+
+;;; Commentary:
 ;; Modus themes builtin
 
+;;; Code:
 (use-package auto-dark
   :ensure t
   :config
@@ -12,4 +16,11 @@
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 
+;; protesilaos spacious padding
+(use-package spacious-padding
+  :ensure t
+  :config
+  (add-hook 'server-after-make-frame-hook #'spacious-padding-mode))
+
 (provide 'themess)
+;;; themess.el ends here
