@@ -1,4 +1,8 @@
-;; Themes and visual components
+;;; window-customs --- Themes and visual components
+;;; Commentary:
+;;
+
+;;; Code:
 (global-hl-line-mode 1)
 ;; (display-battery-mode 1)
 (blink-cursor-mode 0)
@@ -23,7 +27,8 @@
 	(vertical-scroll-bars . nil)
 	(horizontal-scroll-bars . nil)
 	;; (font . "Iosevka Comfy Fixed-16")
-	(font . "Space Mono-14")))
+	(font . "Space Mono-14")
+	))
 
 (setf initial-frame-alist lz/frame-settings
       default-frame-alist lz/frame-settings)
@@ -99,3 +104,4 @@ as argument starts a new eshell, 'term starts a new term and
     (select-window current)))
 
 (provide 'window-custom)
+;;; window-custom.el ends here

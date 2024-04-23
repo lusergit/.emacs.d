@@ -1,7 +1,28 @@
-;;; package -- Metalang
+;;; metalang.el --- Support for lsp and error signaling -*- lexical-binding: t -*-
+
+;; Author: Luca
+;; Maintainer: Luca
+;; Version: 0.1
+;; Package-Requires: (helm )
+
+;; This file is not part of GNU Emacs
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;; Provide support for language servers and spell checking and
-;; autocompletion, on a per-language basis.
+
+;; Provides support for the lsp and error signaling inside of code.
 
 ;;; Code:
 
@@ -14,13 +35,15 @@
   :hook ((c-mode . lsp)
 	 (c++-mode . lsp)
 	 (rust-mode . lsp)
+	 (zig-mode . lsp)
 	 (tex-mode . lsp)
-	 (LaTeX-mode . lsp))
+	 (latex-mode . lsp))
   :commands lsp)
 
 (use-package flycheck
   :ensure t
   :config
+  (setq flycheck-emacs-lisp-load-path 'inherit)
   (global-flycheck-mode))
 
 (use-package company
@@ -31,9 +54,7 @@
   (use-package company-c-headers
     :ensure t
     :config
-    (add-to-list 'company-backends 'company-c-headers)
-    (define-key c-mode-map  [(tab)] 'company-complete)
-    (define-key c++-mode-map  [(tab)] 'company-complete)))
+    (add-to-list 'company-backends 'company-c-headers)))
 
 (require 'helm)
 (use-package helm-gtags
@@ -71,5 +92,8 @@
 ;; auto matching parenthesis
 (electric-pair-mode t)
 
+(setq treesit-extra-load-path "~/gitgets/tree-sitter-module/dist/")
+
 (provide 'metalang)
+
 ;;; metalang.el ends here

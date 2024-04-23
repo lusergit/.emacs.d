@@ -11,3 +11,7 @@ eshell/
 org-roam.db
 snippets/
 tramp
+quelpa
+tree-sitter
+url
+projects

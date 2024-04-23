@@ -1,3 +1,8 @@
+;;; Org-custom -- org mode configurations
+;;; Commentary:
+;; pdf tools and agenda settings mostly
+
+;;; Code:
 (use-package pdf-tools
   :ensure
   :config
@@ -81,10 +86,18 @@ With a prefix ARG, remove start location."
 (use-package org-roam
   :ensure
   :config
-  (defvar lz/biblio-dir "~/biblio")
+
+  (defcustom
+    lz/biblio-dir
+    "~/biblio"
+    "Directory della bibliografia globale."
+    :type 'string
+    :group 'lz-custom)
+
   (setq org-roam-directory (file-truename lz/biblio-dir))
   (org-roam-db-autosync-mode)
   (org-roam-setup)
+
   :bind (("C-c n l" . org-roam-buffer-toggle)
 	 ("C-c n f" . org-roam-node-find)
 	 ("C-c n i" . org-roam-node-insert)))
@@ -111,6 +124,7 @@ With a prefix ARG, remove start location."
       org-latex-create-formula-image-program 'imagemagick
       ;; org-agenda-view-columns-initially nil
       org-highlight-latex-and-related '(latex script entities)
+      org-agenda-remove-tags t
       org-latex-listings 'minted)
 
 ;; org-latex-classes defined in ox-latex
@@ -133,19 +147,19 @@ With a prefix ARG, remove start location."
    (lisp . t)))
 
 ;; Org agenda
-(setq org-agenda-span 'month)
+(setq org-agenda-span 'day)
 
 (defun lz/save-export-scompile ()
-  " Macro function to save the currently working org document,
-export it to latex and compile it to pdf"
+  "Macro function to save the currently working org document.
+It will export it to latex and compile it to pdf"
   (interactive)
   (save-buffer)
   (org-latex-export-to-latex)
   (lz/silent-compile))
 
 (defun lz/save-beamer-scompile ()
-  " Macro function to save the currently working org document,
-export it to latex and compile it to pdf"
+  "Macro function to save the currently working org document.
+It will export it to latex and compile it to pdf"
   (interactive)
   (save-buffer)
   (org-beamer-export-to-latex)
@@ -156,8 +170,27 @@ export it to latex and compile it to pdf"
 
 (set-default 'preview-scale-function 2)
 
-;; (add-hook 'server-after-make-frame-hook #'org-agenda-list)
-;; (add-hook 'after-init-hook #'org-agenda-list)
-;; (setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
+(defvar lz/task-files
+  '("~/uni/interval_detail.org")
+  "Files with the TODO tasks for a specific topic.")
+
+(setq org-agenda-custom-commands
+      '(("w" "This Week's Tasks"
+	 ((agenda "" ((org-agenda-span 7)
+		      (org-agenda-overriding-header "This Week")))
+	  (tags-todo
+	   "tesi+active+PRIORITY=\"A\""
+	   ((org-agenda-files '("~/uni/interval_detail.org"))
+	    (org-agenda-overriding-header "Ora")))
+	  (tags-todo
+	   "tesi+active+PRIORITY=\"C\""
+	   ((org-agenda-files '("~/uni/interval_detail.org"))
+	    (org-agenda-overriding-header "Poi")))
+	  ))))
+
+(add-hook 'server-after-make-frame-hook #'(lambda () (org-agenda nil "w")))
+(add-hook 'after-init-hook #'(lambda () (org-agenda nil "w")))
+(setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
 
 (provide 'org-custom)
+;;; org-custom.el ends here

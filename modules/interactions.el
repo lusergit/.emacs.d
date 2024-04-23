@@ -7,6 +7,13 @@
 ;; - evil
 
 ;;; Code:
+
+;; (defcustom lz/evil-side
+;;   1
+;;   "Weather or not to activate evil shortcuts."
+;;   :type 'integer
+;;   :group 'lz-group)
+
 (use-package helm
   :ensure t
   :config
@@ -144,7 +151,7 @@
 (use-package helm-swoop
   :ensure t
   :config
-  (global-set-key (kbd "C-s") 'helm-swoop)
+  ;; (global-set-key (kbd "C-s") 'helm-swoop)
   (global-set-key (kbd "M-S") 'helm-swoop-back-to-last-point)
   (global-set-key (kbd "C-c C-s") 'helm-multi-swoop)
   (global-set-key (kbd "C-x M-s") 'helm-multi-swoop-all)
@@ -169,7 +176,11 @@
   :ensure t
   :init (setq evil-want-C-i-jump nil)
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  (setf evil-default-state 'emacs)
+  (evil-set-initial-state 'prog-mode 'normal)
+  (evil-set-initial-state 'elisp-mode 'normal)
+  (evil-set-initial-state 'LaTeX-mode 'normal))
 
 (use-package marginalia
   :ensure t
@@ -192,6 +203,17 @@
   (find-file
    (expand-file-name
     (concat user-emacs-directory "init.el"))))
+
+(defun lz/switch-buffers-2-win ()
+  "When in split window view switch the buffers."
+  (interactive)
+  (let* ((other-window (other-window-for-scrolling))
+	 (this-window (selected-window))
+	 (other-buffer (window-buffer other-window))
+	 (this-buffer (window-buffer this-window)))
+    (set-window-buffer other-window this-buffer)
+    (set-window-buffer this-window other-buffer)))
+(global-set-key (kbd "C-x w i") 'lz/switch-buffers-2-win)
 
 (provide 'interactions)
 ;;; interactions.el ends here

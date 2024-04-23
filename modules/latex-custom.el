@@ -1,32 +1,28 @@
-(defun lz/silent-compile ()
-  "Run compile in a silent buffer, not displaying it"
-  (interactive)
-  (let* ((bname "*compilation*"))
-    (progn
-      (if (get-buffer bname)
-  	  (progn
-  	    (delete-windows-on (get-buffer bname))
-  	    (kill-buffer bname)))
-      (let* ((other-win (split-window-vertically))
-	     (get-buffer-create bname))
-	(call-interactively 'compile)
-	(delete-window other-win)
-	(delete-windows-on (get-buffer bname))
-	(message "Compiling")))))
+;;; LaTeX -- LaTeX configurations
 
-(defun lz/switch-buffers-2-win ()
-  "When in split window view switch the buffers"
+;;; Commentary:
+;; Custom configurations for latex and all its derivative options
+;; (e.g., working with latex preview in org mode)
+
+;;; Code:
+(defun lz/silent-compile ()
+  "Run compile in a silent buffer, not displaying it."
   (interactive)
-  (let* ((other-window (other-window-for-scrolling))
-	 (this-window (selected-window))
-	 (other-buffer (window-buffer other-window))
-	 (this-buffer (window-buffer this-window)))
-    (set-window-buffer other-window this-buffer)
-    (set-window-buffer this-window other-buffer)))
-(global-set-key (kbd "C-x w i") 'lz/switch-buffers-2-win)
+  (let* ((bname "*compilation*")
+	 (other-win (other-window-for-scrolling))
+	 (other-buf (window-buffer other-win)))
+    (if (get-buffer bname)
+  	(progn
+  	  (delete-windows-on (get-buffer bname))
+  	  (kill-buffer bname))
+      (get-buffer-create bname t))
+    (call-interactively 'compile)
+    (set-window-buffer other-win other-buf)
+    (delete-windows-on (get-buffer bname))
+    (message "Compiling...")))
 
 (defun lz/latex-save-and-compile ()
-  "A macro function to save and compile with one step"
+  "A macro function to save and compile with one step."
   (interactive)
   (save-buffer)
   (lz/silent-compile))
@@ -36,6 +32,7 @@
   :config
   (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (add-hook 'LaTeX-mode-hook 'TeX-fold-mode)
   (setq TeX-source-correlate-method 'synctex)
   (setq TeX-source-correlate-start-server t)
   (if (boundp 'LaTeX-mode-map)
@@ -44,3 +41,4 @@
 
 
 (provide 'latex-custom)
+;;; latex-custom.el ends here

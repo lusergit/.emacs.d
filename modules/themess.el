@@ -3,6 +3,12 @@
 ;;; Commentary:
 ;; Modus themes builtin
 
+;; Base16 themes
+;; (use-package base16-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'base16-gruvbox-light-soft))
+
 ;;; Code:
 (use-package auto-dark
   :ensure t

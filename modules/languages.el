@@ -50,5 +50,18 @@
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
 
+(use-package zig-mode
+  :ensure t
+  :config
+  (if (>= emacs-major-version 28)
+      (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+    (progn
+      (defun colorize-compilation-buffer ()
+	(let ((inhibit-read-only t))
+          (ansi-color-apply-on-region compilation-filter-start (point))))
+      (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))))
+
+(use-package kotlin-mode :ensure)
+
 (provide 'languages)
 ;;; languages.el ends here
