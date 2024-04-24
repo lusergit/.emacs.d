@@ -36,6 +36,19 @@
 (setq auto-save-file-name-transforms
 `((".*" ,temporary-file-directory t)))
 
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' EXECPATH and PATH environment.
+Set the two in order to match that used by the user's shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string
+			  "[ \t\n]*$" "" (shell-command-to-string
+					  "$SHELL --login -c 'echo $PATH'"
+						    ))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
+
 (defgroup lz-group nil
   "Customization group for my custom settings."
   :group 'convenience)
@@ -50,8 +63,8 @@
 (require 'git-custom)
 (require 'themess)
 (require 'org-custom)
-(require 'languages)
 (require 'site)
+(require 'languages)
 (require 'latex-custom)
 ;; (require 'splash)
 ;; (splash-quotes-mode t)
