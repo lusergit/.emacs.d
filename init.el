@@ -5,7 +5,6 @@
 ;; modules (elisp code)
 
 ;;; Code:
-(setq user-email-address "lucazanny@gmail.com")
 
 ;; Set custom file
 (setq custom-file (concat user-emacs-directory "custom.el"))
@@ -56,7 +55,8 @@ Set the two in order to match that used by the user's shell."
 ;; MODULES
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'window-custom)
-(require 'modeline)
+;; deprecated
+;; (require 'modeline)
 (require 'lofi)
 (require 'proverif)
 (require 'music-chord)
