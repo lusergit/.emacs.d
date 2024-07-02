@@ -4,24 +4,50 @@
 ;; provides support for every language
 
 ;;; Code:
-(use-package clojure-mode :ensure)
-(use-package cider
-  :ensure t)
+(use-package clojure-mode)
+
+(use-package elixir-mode
+  :ensure t
+  :hook
+  (elixir-mode . (lambda ()
+		   (push '(">=" . ?\u2265) prettify-symbols-alist)
+		   (push '("<=" . ?\u2264) prettify-symbols-alist)
+		   (push '("!=" . ?\u2260) prettify-symbols-alist)
+		   (push '("==" . ?\u2A75) prettify-symbols-alist)
+		   (push '("=~" . ?\u2245) prettify-symbols-alist)
+		   (push '("<-" . ?\u2190) prettify-symbols-alist)
+		   (push '("->" . ?\u2192) prettify-symbols-alist)
+		   (push '("<-" . ?\u2190) prettify-symbols-alist)
+		   (push '("|>" . ?\u25B7) prettify-symbols-alist)))
+  (elixir-mode . eglot-ensure)
+  (before-save . eglot-format))
+
+(use-package mix
+  :config
+  (add-hook 'elixir-mode-hook 'mix-minor-mode))
+
+(use-package cider)
+
 (use-package rust-mode
-  :ensure
   :config
   (setq rust-format-on-save t)
   (add-to-list 'exec-path "~/.cargo/bin"))
-(use-package typescript-mode :ensure)
-(use-package markdown-mode :ensure)
-(use-package erlang :ensure)
-(use-package haskell-mode :ensure)
-(use-package nix-mode :ensure)
-(use-package move-mode :ensure)
-(use-package web :ensure)
+
+(use-package typescript-mode)
+
+(use-package markdown-mode)
+
+(use-package erlang)
+
+(use-package haskell-mode)
+
+(use-package nix-mode)
+
+(use-package move-mode)
+
+(use-package web)
 
 (use-package go-mode
-  :ensure
   :config
   (defun lsp-go-install-save-hooks ()
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
@@ -29,18 +55,16 @@
   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
 (use-package slime
-  :ensure
   :init
   (setq inferior-lisp-program "sbcl"))
 
 (use-package yaml-mode
-  :ensure
   :config
   (add-hook 'yaml-mode-hook
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
-(use-package htmlize :ensure)
+(use-package htmlize)
 
 ;; AGDA
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
@@ -51,7 +75,6 @@
              (shell-command-to-string "agda-mode locate")))
 
 (use-package zig-mode
-  :ensure t
   :config
   (if (>= emacs-major-version 28)
       (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
@@ -61,7 +84,7 @@
           (ansi-color-apply-on-region compilation-filter-start (point))))
       (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))))
 
-(use-package kotlin-mode :ensure)
+(use-package kotlin-mode)
 
 (provide 'languages)
 ;;; languages.el ends here

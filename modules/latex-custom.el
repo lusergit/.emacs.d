@@ -5,7 +5,8 @@
 ;; (e.g., working with latex preview in org mode)
 
 ;;; Code:
-(defun lz/silent-compile ()
+
+(defun lz/latex-silent-compile ()
   "Run compile in a silent buffer, not displaying it."
   (interactive)
   (let* ((bname "*compilation*")
@@ -16,7 +17,7 @@
   	  (delete-windows-on (get-buffer bname))
   	  (kill-buffer bname))
       (get-buffer-create bname t))
-    (call-interactively 'compile)
+    (call-interactively 'projectile-compile-project)
     (set-window-buffer other-win other-buf)
     (delete-windows-on (get-buffer bname))
     (message "Compiling...")))
@@ -25,7 +26,7 @@
   "A macro function to save and compile with one step."
   (interactive)
   (save-buffer)
-  (lz/silent-compile))
+  (lz/latex-silent-compile))
 
 (use-package latex
   :ensure auctex
@@ -38,7 +39,6 @@
   (if (boundp 'LaTeX-mode-map)
       (define-key LaTeX-mode-map (kbd "M-s M-s") 'lz/latex-save-and-compile)
     (define-key latex-mode-map (kbd "M-s M-s") 'lz/latex-save-and-compile)))
-
 
 (provide 'latex-custom)
 ;;; latex-custom.el ends here

@@ -94,6 +94,38 @@
 
 (setq treesit-extra-load-path "~/gitgets/tree-sitter-module/dist/")
 
+;; projectile
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+;; neotree
+(use-package neotree
+  :ensure t
+  :config
+  (global-set-key (kbd "<XF86Favorites>") 'neotree-toggle)
+  (setq neo-smart-open t
+	projectile-switch-project-action 'neotree-projectile-action))
+
+;; eglot for formatting
+(use-package eglot :ensure)
+
+;; compile with silent buffer
+;; (defun lz/hide-compilation-buffer (_proc)
+;;   "Hide the compile buffer `PROC' is ignored."
+;;   ;; (let* ((window (get-buffer-window "*compilation*"))
+;;   ;;        ;;(frame (window-frame window))
+;;   ;; 	 )
+;;     (with-current-buffer-window "*compilation*" nil nil
+;;       (bury-buffer))
+;;     ;; (ignore-errors
+;;     ;;   (delete-window window)))
+;;     )
+
+;; (add-hook 'compilation-finish-hook 'lz/hide-compilation-buffer)
+
 (provide 'metalang)
 
 ;;; metalang.el ends here

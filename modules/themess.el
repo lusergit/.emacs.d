@@ -28,5 +28,10 @@
   :config
   (add-hook 'server-after-make-frame-hook #'spacious-padding-mode))
 
+;; olivetti !!
+(use-package olivetti :ensure t
+  :config
+  (add-hook 'olivetti-mode-on-hook (lambda () (olivetti-set-width 80))))
+
 (provide 'themess)
 ;;; themess.el ends here

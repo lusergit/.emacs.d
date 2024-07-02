@@ -55,8 +55,7 @@ Set the two in order to match that used by the user's shell."
 ;; MODULES
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'window-custom)
-;; deprecated
-;; (require 'modeline)
+(require 'modeline)
 (require 'lofi)
 (require 'proverif)
 (require 'music-chord)
@@ -79,6 +78,8 @@ Set the two in order to match that used by the user's shell."
 ;; more
 ;; (require 'telegram-custom)
 (require 'matrix-custom)
+(require 'comics)
+(require 'spoti)
 
 (provide 'init)
 ;;; init.el ends here

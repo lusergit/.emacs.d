@@ -149,6 +149,22 @@ With a prefix ARG, remove start location."
 ;; Org agenda
 (setq org-agenda-span 'day)
 
+(defun lz/silent-compile ()
+  "Run compile in a silent buffer, not displaying it."
+  (interactive)
+  (let* ((bname "*compilation*")
+	 (other-win (other-window-for-scrolling))
+	 (other-buf (window-buffer other-win)))
+    (if (get-buffer bname)
+  	(progn
+  	  (delete-windows-on (get-buffer bname))
+  	  (kill-buffer bname))
+      (get-buffer-create bname t))
+    (call-interactively 'compile)
+    (set-window-buffer other-win other-buf)
+    (delete-windows-on (get-buffer bname))
+    (message "Compiling...")))
+
 (defun lz/save-export-scompile ()
   "Macro function to save the currently working org document.
 It will export it to latex and compile it to pdf"

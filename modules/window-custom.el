@@ -21,14 +21,15 @@
       tab-bar-tab-hints t)
 (tab-bar-history-mode 1)
 
-(setq lz/frame-settings
-      '((width . 100)
-	(height . 30)
-	(vertical-scroll-bars . nil)
-	(horizontal-scroll-bars . nil)
-	;; (font . "Iosevka Comfy Fixed-16")
-	(font . "Space Mono-14")
-	))
+(defconst lz/frame-settings
+  '((width . 100)
+    (height . 30)
+    (vertical-scroll-bars . nil)
+    (horizontal-scroll-bars . nil)
+    (font . "Monospace-14")
+    ;; (font . "Iosevka Comfy Fixed-14")
+    ;; (font . "Space Mono-14")
+    ))
 
 (setf initial-frame-alist lz/frame-settings
       default-frame-alist lz/frame-settings)
