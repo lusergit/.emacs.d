@@ -6,27 +6,7 @@
 
 ;;; Code:
 
-(defun lz/latex-silent-compile ()
-  "Run compile in a silent buffer, not displaying it."
-  (interactive)
-  (let* ((bname "*compilation*")
-	 (other-win (other-window-for-scrolling))
-	 (other-buf (window-buffer other-win)))
-    (if (get-buffer bname)
-  	(progn
-  	  (delete-windows-on (get-buffer bname))
-  	  (kill-buffer bname))
-      (get-buffer-create bname t))
-    (call-interactively 'projectile-compile-project)
-    (set-window-buffer other-win other-buf)
-    (delete-windows-on (get-buffer bname))
-    (message "Compiling...")))
-
-(defun lz/latex-save-and-compile ()
-  "A macro function to save and compile with one step."
-  (interactive)
-  (save-buffer)
-  (lz/latex-silent-compile))
+(require 'org-custom)
 
 (use-package latex
   :ensure auctex
@@ -37,8 +17,8 @@
   (setq TeX-source-correlate-method 'synctex)
   (setq TeX-source-correlate-start-server t)
   (if (boundp 'LaTeX-mode-map)
-      (define-key LaTeX-mode-map (kbd "M-s M-s") 'lz/latex-save-and-compile)
-    (define-key latex-mode-map (kbd "M-s M-s") 'lz/latex-save-and-compile)))
+      (define-key LaTeX-mode-map (kbd "M-s M-s") #'lz/save-compile)
+    (define-key latex-mode-map (kbd "M-s M-s") #'lz/save-compile)))
 
 (provide 'latex-custom)
 ;;; latex-custom.el ends here

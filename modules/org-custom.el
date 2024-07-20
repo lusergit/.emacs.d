@@ -14,52 +14,31 @@
   :ensure t
   :hook (org-mode . org-pdftools-setup-link))
 
+(use-package org-noter-pdftools
+  :ensure t
+  :config
+  ;; Added patch function
+  (defun org-noter--check-and-convert-location (location)
+    "If the location is an org-noter-pdftools-location, it transforms 
+it into a (page . height) cons, otherwise it keeps the cons
+unaltered"
+    (if (org-noter-pdftools--location-p location)
+	(cons (org-noter-pdftools--location-page location)
+              (org-noter-pdftools--location-height location))
+      location)))
+
 (use-package org-noter
   :ensure t
   :config
   (require 'org-noter-pdftools)
-  (setq org-noter-auto-save-last-location t))
-
-(use-package org-noter-pdftools
-  :after org-noter
-  :ensure t
-  :config
-  ;; Add a function to ensure precise note is inserted
-  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-                                                   (not org-noter-insert-note-no-questions)
-                                                 org-noter-insert-note-no-questions))
-           (org-pdftools-use-isearch-link t)
-           (org-pdftools-use-freestyle-annot t))
-       (org-noter-insert-note (org-noter--get-precise-info)))))
-  
-  (defun org-noter-set-start-location (&optional arg)
-    "When opening a session with this document, go to the current location.
-With a prefix ARG, remove start location."
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((inhibit-read-only t)
-           (ast (org-noter--parse-root))
-           (location (org-noter--doc-approx-location
-		      (when (called-interactively-p 'any) 'interactive))))
-       (with-current-buffer (org-noter--session-notes-buffer session)
-         (org-with-wide-buffer
-          (goto-char (org-element-property :begin ast))
-          (if arg
-              (org-entry-delete nil org-noter-property-note-location)
-            (org-entry-put nil org-noter-property-note-location
-                           (org-noter--pretty-print-location location))))))))
-  (with-eval-after-load 'pdf-annot
-    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+  (setq org-noter-auto-save-last-location t)
+  (add-hook 'org-noter--pretty-print-location-for-title-hook
+            'org-noter--check-and-convert-location))
 
 (use-package org
   :custom
-  (org-cite-global-bibliography
-   '("/home/luca/globib.bib"))
   (org-cite-export-processors
-   '((t basic)))
+   '((t biblatex)))
   :config
   (add-to-list 'org-src-lang-modes '("latex-macros" . latex))
 
@@ -125,7 +104,7 @@ With a prefix ARG, remove start location."
       ;; org-agenda-view-columns-initially nil
       org-highlight-latex-and-related '(latex script entities)
       org-agenda-remove-tags t
-      org-latex-listings 'minted)
+      org-latex-src-block-backend 'listings)
 
 ;; org-latex-classes defined in ox-latex
 (require 'ox-latex)
@@ -151,38 +130,25 @@ With a prefix ARG, remove start location."
 
 (defun lz/silent-compile ()
   "Run compile in a silent buffer, not displaying it."
-  (interactive)
-  (let* ((bname "*compilation*")
-	 (other-win (other-window-for-scrolling))
-	 (other-buf (window-buffer other-win)))
-    (if (get-buffer bname)
-  	(progn
-  	  (delete-windows-on (get-buffer bname))
-  	  (kill-buffer bname))
-      (get-buffer-create bname t))
-    (call-interactively 'compile)
-    (set-window-buffer other-win other-buf)
-    (delete-windows-on (get-buffer bname))
-    (message "Compiling...")))
+  ;; Get current window config
+  (let ((config (current-window-configuration)))
+    (call-interactively 'projectile-compile-project)
+    (set-window-configuration config)))
 
-(defun lz/save-export-scompile ()
-  "Macro function to save the currently working org document.
-It will export it to latex and compile it to pdf"
+(defun lz/save-compile (&optional hook)
+  "Macro function to save and compile.
+`HOOK' is called whenever non-nil, a function to call is expected."
   (interactive)
   (save-buffer)
-  (org-latex-export-to-latex)
+  (if hook (funcall hook))
   (lz/silent-compile))
 
-(defun lz/save-beamer-scompile ()
-  "Macro function to save the currently working org document.
-It will export it to latex and compile it to pdf"
-  (interactive)
-  (save-buffer)
-  (org-beamer-export-to-latex)
-  (lz/silent-compile))
-
-(define-key org-mode-map (kbd "M-s M-s") 'lz/save-export-scompile)
-(define-key org-mode-map (kbd "M-s M-b") 'lz/save-beamer-scompile)
+(define-key org-mode-map (kbd "M-s M-s")
+	    #'(lambda () (interactive)
+		(lz/save-compile #'org-latex-export-to-latex)))
+(define-key org-mode-map (kbd "M-s M-b")
+	    #'(lambda () (interactive)
+		(lz/save-compile #'org-beamer-export-to-latex)))
 
 (set-default 'preview-scale-function 2)
 

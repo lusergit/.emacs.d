@@ -23,10 +23,11 @@
 
 (defconst lz/frame-settings
   '((width . 100)
-    (height . 30)
+    (height . 40)
     (vertical-scroll-bars . nil)
     (horizontal-scroll-bars . nil)
-    (font . "Monospace-14")
+    (font . "Comic Code Ligatures-14")
+    ;; (font . "Monospace-14")
     ;; (font . "Iosevka Comfy Fixed-14")
     ;; (font . "Space Mono-14")
     ))
