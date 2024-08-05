@@ -160,14 +160,14 @@ unaltered"
       '(("w" "This Week's Tasks"
 	 ((agenda "" ((org-agenda-span 7)
 		      (org-agenda-overriding-header "This Week")))
-	  (tags-todo
-	   "tesi+active+PRIORITY=\"A\""
-	   ((org-agenda-files '("~/uni/interval_detail.org"))
-	    (org-agenda-overriding-header "Ora")))
-	  (tags-todo
-	   "tesi+active+PRIORITY=\"C\""
-	   ((org-agenda-files '("~/uni/interval_detail.org"))
-	    (org-agenda-overriding-header "Poi")))
+	  ;; (tags-todo
+	  ;;  "tesi+active+PRIORITY=\"A\""
+	  ;;  ((org-agenda-files '("~/uni/interval_detail.org"))
+	  ;;   (org-agenda-overriding-header "Ora")))
+	  ;; (tags-todo
+	  ;;  "tesi+active+PRIORITY=\"C\""
+	  ;;  ((org-agenda-files '("~/uni/interval_detail.org"))
+	  ;;   (org-agenda-overriding-header "Poi")))
 	  ))))
 
 (add-hook 'server-after-make-frame-hook #'(lambda () (org-agenda nil "w")))

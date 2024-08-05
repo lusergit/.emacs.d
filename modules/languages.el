@@ -67,12 +67,12 @@
 (use-package htmlize)
 
 ;; AGDA
-(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
-  (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
-  (add-to-list 'exec-path my-cabal-path))
+;; (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
+;;   (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
+;;   (add-to-list 'exec-path my-cabal-path))
 
-(load-file (let ((coding-system-for-read 'utf-8))
-             (shell-command-to-string "agda-mode locate")))
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;              (shell-command-to-string "agda-mode locate")))
 
 (use-package zig-mode
   :config

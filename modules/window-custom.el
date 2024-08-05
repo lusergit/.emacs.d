@@ -23,14 +23,11 @@
 
 (defconst lz/frame-settings
   '((width . 100)
-    (height . 40)
+    (height . 30)
     (vertical-scroll-bars . nil)
     (horizontal-scroll-bars . nil)
-    (font . "Comic Code Ligatures-14")
-    ;; (font . "Monospace-14")
-    ;; (font . "Iosevka Comfy Fixed-14")
-    ;; (font . "Space Mono-14")
-    ))
+    (font . "Monospace-14")
+    (focus-on-map . t)))
 
 (setf initial-frame-alist lz/frame-settings
       default-frame-alist lz/frame-settings)
