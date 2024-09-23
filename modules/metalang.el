@@ -36,9 +36,12 @@
 	 (c++-mode . lsp)
 	 (rust-mode . lsp)
 	 (zig-mode . lsp)
+	 (elixir-mode . lsp)
 	 (tex-mode . lsp)
 	 (latex-mode . lsp))
-  :commands lsp)
+  :diminish lsp-mode
+  :commands lsp
+  :init (add-to-list 'exec-path "/home/luser/.local/bin/"))
 
 (use-package flycheck
   :ensure t
@@ -92,7 +95,7 @@
 ;; auto matching parenthesis
 (electric-pair-mode t)
 
-(setq treesit-extra-load-path "~/gitgets/tree-sitter-module/dist/")
+(setq treesit-extra-load-path '("~/gitgets/tree-sitter-module/dist/"))
 
 ;; projectile
 (use-package projectile
@@ -110,7 +113,7 @@
 	projectile-switch-project-action 'neotree-projectile-action))
 
 ;; eglot for formatting
-(use-package eglot :ensure)
+;; (use-package eglot :ensure)
 
 ;; compile with silent buffer
 ;; (defun lz/hide-compilation-buffer (_proc)

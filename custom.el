@@ -13,10 +13,10 @@
  '(inhibit-startup-screen nil)
  '(ispell-dictionary nil)
  '(lz/evil-side 0)
- '(org-agenda-files nil)
+ '(org-agenda-files '("~/org/todos/pstore/pstore.org"))
  '(org-agenda-inhibit-startup nil)
  '(package-selected-packages
-   '(vterm smudge mix olivetti projectile neotree elixir-mode elixir debbugs quelpa image-roll ement telega kotlin-mode zig-mode spacious-padding marginalia marinalia company-c-headers helm-lsp dap-rust dap-c++ dap-c dap helm-wikipedia helm-gtags company flycheck minions mood-line evil-collection cider auctex auto-dark web web-mode workgroups2 org-tree-slide org-present move-mode nix-mode proverif agda-mode htmlize expand-region base16-theme solo-jazz-theme org-noter-pdftools org-pdftools chatgpt-shell doom-themes all-the-icons helm-swoop helm haskell-mode haskell erlang yasnippet-snippets yasnippet lsp-mode org-cite weblorg org-roam clojure-mode battery-mode yaml yaml-mode pdf-tools org-noter typescript-mode vue-mode markdown-mode slime go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package))
+   '(edit-indirect dired-collapse dired-list dired-narrow dired-ranger dired-subtree dired-rainbow dired-open dired-avfs dired-filter dired-hacks-utils vterm smudge mix olivetti projectile neotree elixir-mode elixir debbugs quelpa image-roll ement telega kotlin-mode zig-mode spacious-padding marginalia marinalia company-c-headers helm-lsp dap-rust dap-c++ dap-c dap helm-wikipedia helm-gtags company flycheck minions mood-line evil-collection cider auctex auto-dark web web-mode workgroups2 org-tree-slide org-present move-mode nix-mode proverif agda-mode htmlize expand-region base16-theme solo-jazz-theme org-noter-pdftools org-pdftools chatgpt-shell doom-themes all-the-icons helm-swoop helm haskell-mode haskell erlang yasnippet-snippets yasnippet lsp-mode org-cite weblorg org-roam clojure-mode battery-mode yaml yaml-mode pdf-tools org-noter typescript-mode vue-mode markdown-mode slime go-mode go mini-frame rust-mode evil magit modus-themes ef-themes use-package))
  '(tab-bar-select-tab-modifiers '(control shift))
  '(user-email-address "lucazanny@gmail.com" t)
  '(visible-bell t)

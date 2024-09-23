@@ -52,6 +52,18 @@ Set the two in order to match that used by the user's shell."
   "Customization group for my custom settings."
   :group 'convenience)
 
+(use-package
+ emacs
+ :ensure nil
+ :custom
+
+ ;; Should use:
+ ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+ ;; at least once per installation or while changing this list
+ (treesit-language-source-alist
+  '((heex "https://github.com/phoenixframework/tree-sitter-heex")
+    (elixir "https://github.com/elixir-lang/tree-sitter-elixir"))))
+
 ;; MODULES
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'window-custom)
@@ -73,13 +85,13 @@ Set the two in order to match that used by the user's shell."
 (require 'tesi)
 (require 'snippets-custom)
 (require 'metalang)
+(require 'dired-custom)
 ;; (require 'tabline)
 
 ;; more
 ;; (require 'telegram-custom)
 (require 'matrix-custom)
 (require 'comics)
-(require 'spoti)
 
 (provide 'init)
 ;;; init.el ends here

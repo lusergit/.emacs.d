@@ -19,8 +19,10 @@
 		   (push '("->" . ?\u2192) prettify-symbols-alist)
 		   (push '("<-" . ?\u2190) prettify-symbols-alist)
 		   (push '("|>" . ?\u25B7) prettify-symbols-alist)))
-  (elixir-mode . eglot-ensure)
-  (before-save . eglot-format))
+  ;; (elixir-mode . eglot-ensure)
+  (before-save . elixir-format)
+  :custom
+  (lsp-elixir-server-command '("/home/luser/gitgets/lexical/_build/dev/package/lexical/bin/start_lexical.sh")))
 
 (use-package mix
   :config
@@ -35,7 +37,8 @@
 
 (use-package typescript-mode)
 
-(use-package markdown-mode)
+(use-package markdown-mode
+  :custom (markdown-command "/usr/bin/pandoc"))
 
 (use-package erlang)
 

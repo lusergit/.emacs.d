@@ -19,7 +19,7 @@
   :config
   ;; Added patch function
   (defun org-noter--check-and-convert-location (location)
-    "If the location is an org-noter-pdftools-location, it transforms 
+    "If the location is an org-noter-pdftools-location, it transforms
 it into a (page . height) cons, otherwise it keeps the cons
 unaltered"
     (if (org-noter-pdftools--location-p location)
@@ -170,9 +170,9 @@ unaltered"
 	  ;;   (org-agenda-overriding-header "Poi")))
 	  ))))
 
-(add-hook 'server-after-make-frame-hook #'(lambda () (org-agenda nil "w")))
-(add-hook 'after-init-hook #'(lambda () (org-agenda nil "w")))
-(setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
+;; (add-hook 'server-after-make-frame-hook #'(lambda () (org-agenda nil "w")))
+;; (add-hook 'after-init-hook #'(lambda () (org-agenda nil "w")))
+;; (setq initial-buffer-choice #'(lambda () (get-buffer "*Org Agenda*")))
 
 (provide 'org-custom)
 ;;; org-custom.el ends here

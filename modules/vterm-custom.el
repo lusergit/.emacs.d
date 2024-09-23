@@ -1,4 +1,4 @@
-;; ;;; spoti.el --- Smudge configurations -*- lexical-binding: t -*-
+;;; vterm-custom.el --- VTerm init and customization -*- lexical-binding: t -*-
 
 ;; Author: Luca
 ;; Maintainer: Luca
@@ -26,16 +26,22 @@
 
 ;;; Commentary:
 
-;; Smudge package configuration and bindings, getting secrets from the shell!
+;; Vterm Settings and initialization.
 
 ;;; Code:
 
-(use-package smudge
-  :bind-keymap ("C-c ." . smudge-command-map)
+(use-package vterm
   :config
-  (setq smudge-oauth2-client-secret (getenv "SPOTIFY_SECRET")
-        smudge-oauth2-client-id (getenv "SPOTIFY_CLIENT_ID")))
+  (dolist (mode '(term-mode-hook
+                  vterm-mode-hook
+                  shell-mode-hook
+                  treemacs-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode
+	      (lambda()
+		(display-line-numbers-mode 0)
+		(hl-line-mode 0)))))
 
-(provide 'spoti)
+(provide 'vterm-custom)
 
-;;; spoti.el ends here
+;;; vterm-custom.el ends here

@@ -22,11 +22,12 @@
 (tab-bar-history-mode 1)
 
 (defconst lz/frame-settings
-  '((width . 100)
-    (height . 30)
+  '((width . 80)
+    (height . 40)
     (vertical-scroll-bars . nil)
     (horizontal-scroll-bars . nil)
-    (font . "Monospace-14")
+    ;; (font . "Monospace-14")
+    (font . "Comic Code-16")
     (focus-on-map . t)))
 
 (setf initial-frame-alist lz/frame-settings

@@ -1,0 +1,1 @@
+("~/src/pstore/" "~/.emacs.d/" "~/gitgets/lexical/" "~/src/elixir_ex/" "~/src/todo/" "~/src/hello/" "~/gitgets/emacs-29.4/")
