@@ -64,6 +64,13 @@ Set the two in order to match that used by the user's shell."
   '((heex "https://github.com/phoenixframework/tree-sitter-heex")
     (elixir "https://github.com/elixir-lang/tree-sitter-elixir"))))
 
+;; Make emacs use ambient variables, otherwise everything breaks!
+(use-package exec-path-from-shell 
+  :ensure t
+  :config 
+  (when (daemonp)
+    (exec-path-from-shell-initialize)))
+
 ;; MODULES
 (add-to-list 'load-path (concat user-emacs-directory "modules/"))
 (require 'window-custom)
@@ -95,3 +102,6 @@ Set the two in order to match that used by the user's shell."
 
 (provide 'init)
 ;;; init.el ends here
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))

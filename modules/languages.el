@@ -6,23 +6,15 @@
 ;;; Code:
 (use-package clojure-mode)
 
-(use-package elixir-mode
+(use-package gleam-ts-mode
+  :mode (rx ".gleam" eos))
+
+(use-package elixir-ts-mode
   :ensure t
   :hook
-  (elixir-mode . (lambda ()
-		   (push '(">=" . ?\u2265) prettify-symbols-alist)
-		   (push '("<=" . ?\u2264) prettify-symbols-alist)
-		   (push '("!=" . ?\u2260) prettify-symbols-alist)
-		   (push '("==" . ?\u2A75) prettify-symbols-alist)
-		   (push '("=~" . ?\u2245) prettify-symbols-alist)
-		   (push '("<-" . ?\u2190) prettify-symbols-alist)
-		   (push '("->" . ?\u2192) prettify-symbols-alist)
-		   (push '("<-" . ?\u2190) prettify-symbols-alist)
-		   (push '("|>" . ?\u25B7) prettify-symbols-alist)))
-  ;; (elixir-mode . eglot-ensure)
-  (before-save . elixir-format)
+  (elixir-ts-mode . (lambda () (add-hook 'before-save-hook #'elixir-format t t)))
   :custom
-  (lsp-elixir-server-command '("/home/luser/gitgets/lexical/_build/dev/package/lexical/bin/start_lexical.sh")))
+  (lsp-elixir-server-command '("/home/luser/.lexical/bin/start_lexical.sh")))
 
 (use-package mix
   :config
@@ -70,12 +62,12 @@
 (use-package htmlize)
 
 ;; AGDA
-;; (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
-;;   (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
-;;   (add-to-list 'exec-path my-cabal-path))
+(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
+  (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
+  (add-to-list 'exec-path my-cabal-path))
 
-;; (load-file (let ((coding-system-for-read 'utf-8))
-;;              (shell-command-to-string "agda-mode locate")))
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
 
 (use-package zig-mode
   :config

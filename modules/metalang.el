@@ -37,11 +37,15 @@
 	 (rust-mode . lsp)
 	 (zig-mode . lsp)
 	 (elixir-mode . lsp)
+	 (elixir-ts-mode . lsp)
 	 (tex-mode . lsp)
+	 (gleam-ts-mode . lsp)
 	 (latex-mode . lsp))
   :diminish lsp-mode
   :commands lsp
-  :init (add-to-list 'exec-path "/home/luser/.local/bin/"))
+  :init
+  (add-to-list 'exec-path "/home/luser/.local/bin/")
+  (add-to-list 'exec-path "/home/luser/.lexical/bin/"))
 
 (use-package flycheck
   :ensure t
@@ -112,6 +116,9 @@
   (setq neo-smart-open t
 	projectile-switch-project-action 'neotree-projectile-action))
 
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
+
 ;; eglot for formatting
 ;; (use-package eglot :ensure)
 
@@ -128,6 +135,33 @@
 ;;     )
 
 ;; (add-hook 'compilation-finish-hook 'lz/hide-compilation-buffer)
+
+;; This assumes you've installed the package via MELPA.
+(use-package ligature
+  :ensure t
+  :config
+  ;; Enable the "www" ligature in every possible major mode
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                       "\\\\" "://"))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
 
 (provide 'metalang)
 
