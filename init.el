@@ -98,10 +98,6 @@ Set the two in order to match that used by the user's shell."
 ;; more
 ;; (require 'telegram-custom)
 (require 'matrix-custom)
-(require 'comics)
 
 (provide 'init)
 ;;; init.el ends here
-
-(load-file (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate")))
