@@ -101,18 +101,9 @@
 
 (setq treesit-extra-load-path '("~/gitgets/tree-sitter-module/dist/"))
 
-;; project
-(use-package project
-  :ensure t
-  :init
-  (defun lz/find-elixir-projects (dir)
-    "Integrate .git project roots."
-    (let ((mixfile (and (setq dir (locate-dominating-file dir "mix.exs"))
-		       (expand-file-name dir))))
-      (and mixfile
-	   `(transient . ,(file-name-directory mixfile)))))
-  :config
-  (add-hook 'project-find-functions 'lz/find-elixir-projects))
+;; project ++ elixir backend
+(use-package project :ensure t)
+(require 'elixir-project-backend)
 
 ;; neotree
 (use-package neotree

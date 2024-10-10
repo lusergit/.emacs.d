@@ -182,10 +182,10 @@
   (evil-set-initial-state 'elisp-mode 'normal)
   (evil-set-initial-state 'LaTeX-mode 'normal))
 
-(use-package marginalia
-  :ensure t
-  :config
-  (marginalia-mode 1))
+;; (use-package marginalia
+;;   :ensure t
+;;   :config
+;;   (marginalia-mode 1))
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 

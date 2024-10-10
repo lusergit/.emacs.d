@@ -14,7 +14,7 @@
   :hook
   (elixir-ts-mode . (lambda () (add-hook 'before-save-hook #'elixir-format t t)))
   :custom
-  (lsp-elixir-server-command '("/home/luser/.lexical/bin/start_lexical.sh")))
+  (lsp-elixir-server-command '("/home/luserworks/gitgets/lexical/_build/dev/package/lexical/bin/start_lexical.sh")))
 
 (use-package mix
   :config

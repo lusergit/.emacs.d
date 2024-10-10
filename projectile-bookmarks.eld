@@ -1,1 +1,0 @@
-("~/seco/edgehog/backend/" "~/.emacs.d/" "~/seco/edgehog/" "~/gitgets/lexical/" "~/src/pstore/" "~/src/helpdesk/" "~/src/todo/" "~/src/barre/" "~/src/etter/" "~/gitgets/commercial-emacs/" "~/.asdf/" "~/src/elixir_ex/" "~/src/astinspect/" "~/src/hello/" "~/gitgets/emacs-29.4/")

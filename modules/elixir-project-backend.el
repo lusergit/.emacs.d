@@ -43,29 +43,15 @@
   "Return the PROJECT of an 'elixir PROJECT type."
   (car (cdr project)))
 
-(defun project-elixir-try (dir)
-  "Return the 'elixir project structure.
+(defun lz/find-elixir-projects (dir)
+  "Tell wether DIR is an elixir project root."
+  (let ((mixfile (and (setq dir (locate-dominating-file dir "mix.exs"))
+		      (expand-file-name dir))))
+    (and mixfile
+	 (list 'elixir (file-name-directory mixfile)))))
 
-If DIR is in an elixir project return the project structure."
-  (let ((dominant (locate-dominating-file dir "mix.exs")))
-    (let ((igns nil) (extr nil) (dotfile (concat dominating ".project")))
-      (when (and (file-exists-p dotfile) (file-readable-p dotfile))
-	(let ((linep t)
-	      (line ""))
-	  (with-temp-buffer
-	    (insert-file-contents-literally (concat dominating ".project"))
-	    (goto-char (point-min))
-	    (while linep
-	      (setq line (buffer-substring-no-properties
-			  (line-beginning-position)
-			  (line-end-position)))
-	      (let ((split (split-string line ":")))
-		(when (= 2 (length split))
-		  (if (string= (car split) "#")
-		      (setq igns (cons (car (cdr split)) igns))
-		    (setq extr (cons (car (cdr split)) extr)))))
-	      (setq linep (= 0 (forward-line 1)))))))))
+(add-hook 'project-find-functions #'lz/find-elixir-projects)
 
-  (provide 'elixir-project-backend)
+(provide 'elixir-project-backend)
 
 ;;; elixir-project-backend.el ends here
