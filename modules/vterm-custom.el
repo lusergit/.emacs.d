@@ -31,16 +31,8 @@
 ;;; Code:
 
 (use-package vterm
-  :config
-  (dolist (mode '(term-mode-hook
-                  vterm-mode-hook
-                  shell-mode-hook
-                  treemacs-mode-hook
-                  eshell-mode-hook))
-    (add-hook mode
-	      (lambda()
-		(display-line-numbers-mode 0)
-		(hl-line-mode 0)))))
+  :hook
+  (vterm-mode . (lambda () (display-line-numbers-mode -1))))
 
 (provide 'vterm-custom)
 

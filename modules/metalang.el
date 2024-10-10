@@ -101,12 +101,18 @@
 
 (setq treesit-extra-load-path '("~/gitgets/tree-sitter-module/dist/"))
 
-;; projectile
-(use-package projectile
+;; project
+(use-package project
   :ensure t
+  :init
+  (defun lz/find-elixir-projects (dir)
+    "Integrate .git project roots."
+    (let ((mixfile (and (setq dir (locate-dominating-file dir "mix.exs"))
+		       (expand-file-name dir))))
+      (and mixfile
+	   `(transient . ,(file-name-directory mixfile)))))
   :config
-  (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+  (add-hook 'project-find-functions 'lz/find-elixir-projects))
 
 ;; neotree
 (use-package neotree
@@ -114,7 +120,9 @@
   :config
   (global-set-key (kbd "<XF86Favorites>") 'neotree-toggle)
   (setq neo-smart-open t
-	projectile-switch-project-action 'neotree-projectile-action))
+	projecte-switch-project-action 'neotree-projectile-action)
+  :hook
+  (neotree-mode . (lambda () (display-line-numbers-mode -1))))
 
 (use-package envrc
   :hook (after-init . envrc-global-mode))

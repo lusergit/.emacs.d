@@ -65,9 +65,9 @@ Set the two in order to match that used by the user's shell."
     (elixir "https://github.com/elixir-lang/tree-sitter-elixir"))))
 
 ;; Make emacs use ambient variables, otherwise everything breaks!
-(use-package exec-path-from-shell 
+(use-package exec-path-from-shell
   :ensure t
-  :config 
+  :config
   (when (daemonp)
     (exec-path-from-shell-initialize)))
 
@@ -84,8 +84,6 @@ Set the two in order to match that used by the user's shell."
 (require 'site)
 (require 'languages)
 (require 'latex-custom)
-;; (require 'splash)
-;; (splash-quotes-mode t)
 (require 'treesit)
 (require 'interactions)
 (require 'site)
@@ -93,11 +91,8 @@ Set the two in order to match that used by the user's shell."
 (require 'snippets-custom)
 (require 'metalang)
 (require 'dired-custom)
-;; (require 'tabline)
-
-;; more
-;; (require 'telegram-custom)
 (require 'matrix-custom)
+(require 'vterm-custom)
 
 (provide 'init)
 ;;; init.el ends here
